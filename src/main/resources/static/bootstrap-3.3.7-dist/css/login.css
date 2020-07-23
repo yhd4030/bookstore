@@ -1,0 +1,51 @@
+html{
+
+}
+body{
+}
+#login_DivMax{
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+.layui-nav{
+    margin-bottom: 0px;
+}
+.layui-nav-item a:hover,.layui-nav-item a:active{
+    text-decoration: none;
+}
+#login_DivMin{
+    background-color: rgba(0,0,0,0.5);
+    width: 300px;
+    height: 450px;
+    border: black 1px solid;
+    position: absolute;
+    right: 10%;
+    top: 240%;
+}
+.layui-form-item{
+    position: absolute;
+}
+#userNameDiv{
+    top: 20%;
+    width: 100%;
+}
+#passWordDiv{
+    top: 40%;
+    width: 100%;
+}
+#loginBtnDiv{
+    top: 60%;
+    width: 100%;
+}
+#loginBtnDiv div{
+    left: 35%;
+}
+.layui-form-item div{
+    position: absolute;
+    left: 25%;
+    margin-left: 0px;
+}
+.layui-form-item label{
+    left: -12px;
+}
