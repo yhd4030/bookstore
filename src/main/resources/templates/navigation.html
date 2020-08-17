@@ -8,13 +8,13 @@
         <!--        登录-->
         <li class="layui-nav-item navbar-right nav_hover">
             <!--            判断是否登录过 如果登录过则将导航栏的用户图标改为用户名-->
-            <a th:if="${session.user==null}" href="/user/login">
+            <a th:if="${#httpServletRequest.session.getAttribute('username')==null}" href="/user/login">
                 <i class="layui-icon layui-icon-user" style="font-size: 30px; color: #1E9FFF;"></i>
             </a>
-            <span class=" dropdown-toggle" id="dropdown-user" th:if="${session.user!=null}" href="#" style="padding: 0 20px"
+            <span class=" dropdown-toggle" id="dropdown-user" th:if="${#httpServletRequest.session.getAttribute('username')!=null}" href="#" style="padding: 0 20px"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">
-                    <span th:text="${session.user.name}" style="font-size: 19px"></span>
+                    <span th:inline="text" style="font-size: 19px">[[${#httpServletRequest.remoteUser}]]</span>
                 </i>
                 <i class="layui-icon layui-icon-triangle-d" style="font-size: 15px; color: #1E9FFF;"></i>
             </span>
@@ -23,7 +23,16 @@
                 <li><a href="#"><i class="layui-icon layui-icon-notice" style="font-size: 30px; color: #1E9FFF;"></i><span>通知</span></a></li>
                 <li><a href="#"><i class="layui-icon layui-icon-set" style="font-size: 30px; color: #1E9FFF;"></i><span>设置</span></a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#"><i class="layui-icon layui-icon-logout" style="font-size: 30px; color: #1E9FFF;"></i><span>设置</span></a></li>
+                <li>
+                    <a href="/user/logout">
+<!--                        <form th:action="@{/user/logout}" method="post">-->
+<!--                            <button style="background-color: white;border:none">-->
+                                    <i class="layui-icon layui-icon-logout" style="font-size: 30px; color: #1E9FFF;"></i>
+                                    <span>退出</span>
+<!--                            </button>-->
+<!--                        </form>-->
+                    </a>
+                </li>
             </ul>
         </li>
 

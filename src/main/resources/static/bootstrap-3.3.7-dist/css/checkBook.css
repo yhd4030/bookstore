@@ -129,6 +129,7 @@
     position: relative;
     width: 630px;
     z-index: 6666;
+
 }
 .price_info .price_pc {
     float: left;
@@ -157,5 +158,24 @@
 }
 .messbox_info span{
     display: block;
+}
+#date{
+    display: contents;
+}
+.buy-btn{
+    font-size: 20px;
+}
+.buy-btn:hover{
+    text-decoration: none;
+}
+.buy-btn-area{
+    width: 100%;
+    position: relative;
+    top: 75px;
+}
+.buy-btn-area div{
+    display: inline;
+    width: 151px;
+    margin-right: 10%;
 }
 

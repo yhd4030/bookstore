@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/indexCss.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBook.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBook_2.css}">
 
     <script th:src="@{/js/jquery-3.4.1.min.js}" type="application/javascript"></script>
     <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}" type="text/javascript"></script>
@@ -65,21 +66,20 @@
                 <div class="sale_box_left">
                     <!--书的标题描述-->
                     <div class="name_info">
-                        <h1 th:text="${session.bookMsgDTO.imgTitle}"></h1>
+                        <h1 id="bookName" th:text="${session.bookMsgDTO.bookName}"></h1>
                         <h2>
-                            <span class="book_desc" th:text="${session.bookMsgDTO.imgTitle}"></span>
+                            <span class="book_desc" th:text="${session.bookMsgDTO.bookDescription}"></span>
                         </h2>
                     </div>
                     <!--                    书的作者信息区-->
                     <div class="messbox_info">
-                        <span>作者：<a href="#"></a></span>
-                        <span>出版社：<a href="#"></a></span>
-                        <span>发行日期：<a href="#"></a></span>
+                        <span>作者：<a href="#" th:text="${session.bookMsgDTO.author}"></a></span>
+                        <span>出版社：<a href="#" th:text="${session.bookMsgDTO.press}"></a></span>
+                        <span>发行日期：<a style="display: inline-block" href="#" ><span id="publish-date" th:text="${#dates.format(session.bookMsgDTO.releaseDate,'yyyy-MM-dd HH:mm')}"></span></a></span>
                         <span></span>
                     </div>
-                    <div></div>
                     <!--价格区-->
-                    <div class="price_info clearfix">
+                    <div id="price-area" class="price_info clearfix">
                         <div class="price_pc">
                             <div style="width: 206px;height: 64px;">
                                 <div class="price_d">
@@ -93,6 +93,49 @@
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+<!--                    书籍关联区-->
+                    <div class="cuxiao_info choose_xilie clearfix">
+                        <div class="left">关联商品</div>
+                        <div class="right">
+                            <div class="clearfix">
+                                <ul class="list_e">
+                                    <li>
+                                        <a class="btn btn-default  jia_gou_e chosen" href="#" >
+                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="" >
+                                            <span th:text="${session.bookMsgDTO.bookName}"></span>
+                                        </a>
+                                        <a class="btn btn-default  jia_gou_e chosen" href="#" >
+                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="" >
+                                            <span th:text="${session.bookMsgDTO.bookName}"></span>
+                                        </a>
+                                        <a class="btn btn-default  jia_gou_e chosen" href="#" >
+                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="" >
+                                            <span th:text="${session.bookMsgDTO.bookName}"></span>
+                                        </a>
+                                        <a class="btn btn-default  jia_gou_e chosen" href="#" >
+                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="" >
+                                            <span th:text="${session.bookMsgDTO.bookName}"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+<!--                    购买按钮区-->
+                    <div class="buy-btn-area">
+                        <div class="">
+                            <a href="/books/buy" class="layui-btn buy-btn">
+                                <i class="layui-icon layui-icon-ok" style="font-size: 30px; color: #5FB878;"></i>
+                                <i style="color: whitesmoke">购买</i>
+                            </a>
+                        </div>
+                        <div class="">
+                            <a href="http://www.layui.com" class="layui-btn layui-btn-warm buy-btn">
+                                <i class="layui-icon layui-icon-cart-simple" style="font-size: 30px; color: #1E9FFF;"></i>
+                                加入购物车
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -121,7 +164,6 @@
         });
         //监听提交
         form.on('submit(login)', function (data) {
-
             return false;
         });
     });
@@ -139,6 +181,24 @@
             alert("111")
         }
     })
+
+function dianji(thisParameter){
+    $(".jia_gou_e").css("background-color","white")//清空颜色
+    $(thisParameter).css("background-color","pink")//再添加颜色
+}
+
+    $("body").ready(function () {
+        var text = $("#bookName").text();
+        $.post("/books/selectBook",{bookName:text},function (data) {
+            var similarBook=data;
+            for (var i=0;i<=similarBook.length;i++){
+                var pic=similarBook[i].imgUrl.split("~");
+                var bookA="<a  onclick='dianji(this)' id='bookNum"+i+"' class='btn btn-default jia_gou_e chosen' href='#'><img class='small_pic_1' src='"+pic[0]+"' alt='' ><span>"+similarBook[i].bookName+"</span></a>"
+                $("#similarBookLi").append(bookA);
+            }
+
+        })
+    });
 
 </script>
 </body>

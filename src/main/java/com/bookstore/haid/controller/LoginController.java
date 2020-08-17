@@ -25,14 +25,15 @@ public class LoginController {
     public  String login(){
         return "login";
     }
-    @ResponseBody
-    @PostMapping(value = "/user/login/checkUser")
-    public User checkUser(User user, HttpServletRequest request, HttpServletResponse response){
-        HttpSession session = request.getSession(true);
-        User checkUser = loginService.checkUser(user);
-        if (checkUser!=null){
-            session.setAttribute("user",checkUser);
-        }
-        return checkUser;
-    }
+
+//    @ResponseBody
+//    @PostMapping(value = "/user/login/checkUser")
+//    public User checkUser(User user, HttpServletRequest request, HttpServletResponse response){
+//        HttpSession session = request.getSession(true);
+//        User checkUser = loginService.checkUser(user);
+//        if (checkUser!=null){
+//            session.setAttribute("user",checkUser);
+//        }
+//        return checkUser;
+//    }
 }

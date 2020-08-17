@@ -26,7 +26,7 @@
     </ul>
     <!--    登录框-->
     <div id="login_DivMin" class="m-login-warp">
-        <form class="layui-form">
+        <form class="layui-form" th:action="@{/user/login}" method="post">
             <div id="userNameDiv" class="layui-form-item">
                 <label class="layui-form-label"><i class="layui-icon layui-icon-username"
                                                    style="font-size: 30px; color: #1E9FFF;"></i></label>
@@ -46,7 +46,7 @@
 
             <div id="loginBtnDiv" class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="login">立即提交</button>
+                    <button class="layui-btn" type="submit" lay-submit lay-filter="login">立即提交</button>
                 </div>
             </div>
         </form>
@@ -63,25 +63,25 @@
 
 
                 //监听提交
-                form.on('submit(login)', function (data) {
-                    $$.ajax({
-                        type: "post",
-                        url: "/user/login/checkUser",
-                        data: data.field,
-                        dataType: "json",
-                        success: function (result) {
-                            if (result != null) {
-                                sessionStorage.setItem('user',result);
-                                window.location.href = "/";
-
-                            }else{
-                                layer.msg("登录失败");
-                            }
-
-                        }
-                    });
-                    return false;
-                });
+                // form.on('submit(login)', function (data) {
+                //     $$.ajax({
+                //         type: "post",
+                //         url: "/user/login/checkUser",
+                //         data: data.field,
+                //         dataType: "json",
+                //         success: function (result) {
+                //             if (result != null) {
+                //                 sessionStorage.setItem('user',result);
+                //                 window.location.href = "/";
+                //
+                //             }else{
+                //                 layer.msg("登录失败");
+                //             }
+                //
+                //         }
+                //     });
+                //     return false;
+                // });
             });
 
 

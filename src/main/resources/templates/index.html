@@ -104,7 +104,7 @@
             success: function (data) {
 
                 for (var i = 0; i < data.length; i++) {
-                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'>" + data[i].imgTitle + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
                         "<span>"+data[i].bookPrice+"</span>" +
@@ -127,7 +127,7 @@
             dataType: "json",
             success: function (data) {
                 for (var i = 0; i < data.length; i++) {
-                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'>" + data[i].imgTitle + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
                         "<span>"+data[i].bookPrice+"</span>" +
@@ -151,7 +151,7 @@
             success: function (data) {
 
                 for (var i = 0; i < data.length; i++) {
-                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'>" + data[i].imgTitle + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
                         "<span>"+data[i].bookPrice+"</span>" +
@@ -159,7 +159,7 @@
                         "</span>" +
                         "</p>";
                     var imgurl=data[i].imgUrl.split("~");
-                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + data[i].imgUrl + "' alt=''></a>" + bookP + "</li>";
+                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
                     $("#tab3_bookClassify").append(bookLi);
                 }
             }
@@ -175,7 +175,7 @@
             success: function (data) {
 
                 for (var i = 0; i < data.length; i++) {
-                    var bookP = "<p class='bookName'><a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"' style='height: 25px'>" + data[i].imgTitle + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"' style='height: 25px'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
                         "<span>"+data[i].bookPrice+"</span>" +
@@ -183,7 +183,7 @@
                         "</span>" +
                         "</p>";
                     var imgurl=data[i].imgUrl.split("~");
-                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + data[i].imgUrl + "' alt=''></a>" + bookP + "</li>";
+                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
                     $("#tab4_bookClassify").append(bookLi);
                 }
             }
@@ -200,7 +200,7 @@
 
                 for (var i = 0; i < data.length; i++) {
 
-                    var bookP = "<p class='bookName'><a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"' style='height: 25px '>" + data[i].imgTitle + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"' style='height: 25px '>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
                         "<span>"+data[i].bookPrice+"</span>" +
@@ -208,7 +208,7 @@
                         "</span>" +
                         "</p>";
                     var imgurl=data[i].imgUrl.split("~");
-                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + data[i].imgUrl + "' alt=''></a>" + bookP + "</li>";
+                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
                     $("#tab5_bookClassify").append(bookLi);
                 }
             }
