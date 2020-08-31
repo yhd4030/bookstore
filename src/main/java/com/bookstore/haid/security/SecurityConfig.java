@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/tab_selectBook").permitAll()
                 //authenticated()登录认证 hasAuthority("")权限认证 如果用户不是普通会员则不能访问
                 .antMatchers("/books/buy").hasAuthority("普通会员")
+                .antMatchers("/books/shopCart").authenticated()
                 .anyRequest().authenticated()//其他请求都需要认证
                 .and()
                 .formLogin()

@@ -74,10 +74,21 @@
 
 <script>
     //注意：导航 依赖 element 模块，否则无法进行功能性操作
-    layui.use(['element', 'carousel'], function () {
+    layui.use(['element', 'carousel','layedit', 'laydate'], function () {
         var element = layui.element
             , carousel = layui.carousel
-            , $ = layui.jquery;
+            , $ = layui.jquery
+            ,layer = layui.layer;
+
+
+        // $("#logoutBtn").click(function () {
+        //         layer.open({
+        //             type: 1,
+        //             content: '传入任意的文本或html' //这里content是一个普通的String
+        //         });
+        //
+        // })
+
 
         $(".layui-tab-title li").hover(function () {
             var $i = $(this).index();

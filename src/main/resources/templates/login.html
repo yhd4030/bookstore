@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Title</title>
-    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/login.css">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/login.css}">
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
     <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/bootstrap.min.css">
 
@@ -24,14 +25,20 @@
             </a>
         </li>
     </ul>
+
+
+
     <!--    登录框-->
     <div id="login_DivMin" class="m-login-warp">
         <form class="layui-form" th:action="@{/user/login}" method="post">
+            <div th:if="${param.logout}" id="logoutMsg" style="width: 100%;height: 50px;text-align: center;font-size: 20px;color: whitesmoke;">
+                您已成功退出登录!
+            </div>
             <div id="userNameDiv" class="layui-form-item">
                 <label class="layui-form-label"><i class="layui-icon layui-icon-username"
                                                    style="font-size: 30px; color: #1E9FFF;"></i></label>
                 <div>
-                    <input type="text" name="username" required lay-verify="required" placeholder="请输入标题"
+                    <input type="text" name="username" required lay-verify="required" placeholder="请输入账号"
                            autocomplete="off" class="layui-input">
                 </div>
             </div>
@@ -58,8 +65,11 @@
                 var form = layui.form
                     , element = layui.element
                     , carousel = layui.carousel
-                    , $$ = layui.jquery
+                    , $ = layui.jquery
                     , layer = layui.layer;
+
+
+
 
 
                 //监听提交
@@ -83,6 +93,9 @@
                 //     return false;
                 // });
             });
+            setTimeout(function () {
+                $("#logoutMsg").hide();
+            },2000);
 
 
 

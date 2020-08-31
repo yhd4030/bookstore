@@ -39,4 +39,9 @@ public class indexController {
         return allImgList;
     }
 
+    @GetMapping("/books/shopCart")
+    public String shopCart(){
+        return "shopCart";
+    }
+
 }

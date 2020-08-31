@@ -1,7 +1,5 @@
-html{
+#logoutMsg{
 
-}
-body{
 }
 #login_DivMax{
     width: 100%;
@@ -49,3 +47,4 @@ body{
 .layui-form-item label{
     left: -12px;
 }
+
