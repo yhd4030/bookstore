@@ -11,7 +11,7 @@
             <a th:if="${#httpServletRequest.session.getAttribute('username')==null}" href="/user/login">
                 <i class="layui-icon layui-icon-user" style="font-size: 30px; color: #1E9FFF;"></i>
             </a>
-            <span class=" dropdown-toggle" id="dropdown-user" th:if="${#httpServletRequest.session.getAttribute('username')!=null}" href="#" style="padding: 0 20px"
+            <span class=" dropdown-toggle " id="dropdown-user" th:if="${#httpServletRequest.session.getAttribute('username')!=null}" href="#" style="padding: 0 20px"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">
                     <span th:inline="text" style="font-size: 19px">[[${#httpServletRequest.remoteUser}]]</span>

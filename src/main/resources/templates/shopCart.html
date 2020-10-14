@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/shopCart.css}">
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
     <link rel="stylesheet" th:href="@{/layui/css/dropdown.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/indexCss.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBook.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBook_2.css}">
-    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/shopCartCss.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/shopCart.css}">
 
     <script th:src="@{/js/jquery-3.4.1.min.js}" type="application/javascript"></script>
     <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}" type="text/javascript"></script>
@@ -18,10 +19,41 @@
 </head>
 <body>
 <div th:insert="~{navigation ::nav}"></div>
-<div class="mainShopCart container-fluid">
-    <div class="wupinShop container-fluid   ">
+<div class="container mainShopCart container-fluid">
+    <div class="container wuPinShow container-fluid">
+        <div class="wuPinLan">
+            <div class="wuPinImg">我是头像1</div>
+            <div class="wuPinMsg" >我是内容</div>
+            <div class="checkDiv"><input class="checkbox1" type="checkbox" value="确认"></div>
+        </div>
 
+        <div class="wuPinLan">
+            <div class="wuPinImg">我是头像2</div>
+            <div class="wuPinMsg" >我是内容</div>
+            <div class="checkDiv"><input class="checkbox1" type="checkbox" value="确认"></div>
+        </div>
+        <div class="wuPinLan ">
+            <div class="wuPinImg">我是头像3</div>
+            <div class="wuPinMsg" style="left: 25%">我是内容</div>
+            <div class="checkDiv"><input class="checkbox1" type="checkbox" value="确认"></div>
+        </div>
+        <div class="wuPinLan ">
+            <div class="wuPinImg">我是头像4</div>
+            <div class="wuPinMsg" style="left: 25%">我是内容</div>
+            <div class="checkDiv"><input class="checkbox1" type="checkbox" value="确认"></div>
+        </div>
+        <div class="wuPinLan ">
+            <div class="wuPinImg">我是头像5</div>
+            <div class="wuPinMsg" style="left: 25%">我是内容</div>
+            <div class="checkDiv"><input class="checkbox1" type="checkbox" value="确认"></div>
+        </div>
+        <div class="wuPinLan ">
+            <div class="wuPinImg">我是头像6</div>
+            <div class="wuPinMsg" style="left: 25%">我是内容</div>
+            <div class="checkDiv"><input class="checkbox1" type="checkbox" value="确认"></div>
+        </div>
     </div>
+
 </div>
 </body>
 </html>
