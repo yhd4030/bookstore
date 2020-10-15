@@ -10,7 +10,6 @@
 
 }
 .wuPinShow {
-    position: relative;
     height: 500px;
     width: 1320px;
     border: 1px solid green;
@@ -31,31 +30,32 @@
     height: 125px;
     border: 1px solid green;
     display: inline-block;
-    position: absolute;
-    left: 50%;
+
 }
 .checkDiv{
     display: inline-block;
     width: 100px;
-    height: 100px;
+    height: 125px;
     border: 1px solid ;
-    float: right;
+    margin-left: 10px;
+    text-align: center;
 }
 .wuPinImg{
     width: 125px;
     height: 125px;
     border: 1px solid green;
     display: block;
-    position: absolute;
     margin-right: 10px;
 }
 .checkbox1{
-    position: absolute;
+    margin-top: 51px;
 }
 .shopCartImg{
     width: 125px;
     height: 125px;
+
 }
+
 
 
 

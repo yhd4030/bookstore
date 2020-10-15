@@ -4,6 +4,7 @@ import com.bookstore.haid.dto.BookMsgDTO;
 import com.bookstore.haid.mapper.CheckBookMapper;
 import com.bookstore.haid.model.BookMsg;
 import com.bookstore.haid.model.BookPublish;
+import com.bookstore.haid.model.ShopCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,4 +24,6 @@ public class CheckBookService {
         List<BookMsg> similarBook = checkBookMapper.similarBook(bookName);
         return similarBook;
     }
+
+
 }

@@ -52,7 +52,6 @@ public class CheckBookMsgController {
     @PostMapping("/books/selectBook")
     public List<BookMsg> selectBook(String bookName){
         List<BookMsg> similarBook = checkBookService.similarBook(bookName);
-        System.out.println(similarBook);
         return similarBook;
     }
 

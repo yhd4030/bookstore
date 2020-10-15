@@ -1,0 +1,12 @@
+package com.bookstore.haid.model;
+
+import lombok.Data;
+
+@Data
+public class ShopCart {
+    private Integer bookId;
+    private String userName;
+    private String bookName;
+    private String imgUrl;
+    private Double bookPrice;
+}

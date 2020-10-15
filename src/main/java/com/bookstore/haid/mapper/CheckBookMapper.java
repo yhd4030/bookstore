@@ -2,6 +2,7 @@ package com.bookstore.haid.mapper;
 
 import com.bookstore.haid.dto.BookMsgDTO;
 import com.bookstore.haid.model.BookMsg;
+import com.bookstore.haid.model.ShopCart;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -18,4 +19,5 @@ public interface CheckBookMapper {
 
     @Select("select * from book_msg where bookName like CONCAT('%',#{bookName},'%')")
     List<BookMsg> similarBook(String bookName);
+
 }

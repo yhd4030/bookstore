@@ -33,12 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/","/index","/books","/user/login").permitAll() // /和/home请求不需要拦截
+                .antMatchers("/", "/index", "/books", "/user/login").permitAll() // /和/home请求不需要拦截
 //                .antMatchers(HttpMethod.POST).permitAll()
-                .antMatchers(HttpMethod.GET,"/tab_selectBook").permitAll()
+                .antMatchers(HttpMethod.GET, "/tab_selectBook").permitAll()
                 //authenticated()登录认证 hasAuthority("")权限认证 如果用户不是普通会员则不能访问
                 .antMatchers("/books/buy").hasAuthority("普通会员")
-                .antMatchers("/books/shopCart").authenticated()
+                .antMatchers("/books/shopCart","/books/shopCart/**").authenticated()
+//                .antMatchers("/books/shopCart/add").authenticated()
                 .anyRequest().authenticated()//其他请求都需要认证
                 .and()
                 .formLogin()
@@ -51,20 +52,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/user/logout")//注销
                 .permitAll()
                 .and()
-        .csrf()
-        .disable()
+                .csrf()
+                .disable()
         ;// /logout不需要拦截
 
 
-            }
+    }
 
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/bootstrap-3.3.7-dist/**","/images/**","/js/**","/layui/**");
+        web.ignoring().antMatchers("/bootstrap-3.3.7-dist/**", "/images/**", "/js/**", "/layui/**");
     }
 
 

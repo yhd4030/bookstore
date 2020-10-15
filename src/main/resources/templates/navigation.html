@@ -14,7 +14,7 @@
             <span class=" dropdown-toggle " id="dropdown-user" th:if="${#httpServletRequest.session.getAttribute('username')!=null}" href="#" style="padding: 0 20px"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">
-                    <span th:inline="text" style="font-size: 19px">[[${#httpServletRequest.remoteUser}]]</span>
+                    <span id="login_username" th:text="${#httpServletRequest.remoteUser}" style="font-size: 19px"></span>
                 </i>
                 <i class="layui-icon layui-icon-triangle-d" style="font-size: 15px; color: #1E9FFF;"></i>
             </span>
@@ -38,7 +38,7 @@
 
         <!--        购物车-->
         <li class="layui-nav-item navbar-right nav_hover">
-            <a href="/books/shopCart">
+            <a th:href="@{'/books/shopCart?username='+${#httpServletRequest.remoteUser}}">
                 <i class="layui-icon layui-icon-cart-simple" style="font-size: 30px; color: #1E9FFF;"></i>
             </a>
 

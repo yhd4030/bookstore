@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -8,12 +10,13 @@
     <link rel="stylesheet" th:href="@{/layui/css/dropdown.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/indexCss.css}">
-    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBook.css}">
-    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBook_2.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBookTest2.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBookTest.css}">
 
     <script th:src="@{/js/jquery-3.4.1.min.js}" type="application/javascript"></script>
     <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/loginSession.js}" type="text/javascript"></script>
+    <!--    <script th:src="@{/js/addShopCart.js}" type="application/javascript"></script>-->
 
 
 </head>
@@ -37,20 +40,39 @@
                 <div class="dp_slide_box" id="booKPic_slide" carousel-item>
                     <div>
                         <ul class="bookPic_slide_ul">
-                            <li ><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_1[0]}" alt=""></a></li>
-                            <li th:if="${imgCount>1}"><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_1[1]}" alt=""></a></li>
-                            <li th:if="${imgCount>2}"><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_1[2]}" alt=""></a></li>
-                            <li th:if="${imgCount>3}"><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_1[3]}" alt=""></a></li>
-                            <li th:if="${imgCount>4}"><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_1[4]}" alt=""></a></li>
+                            <li><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_1[0]}" alt=""></a>
+                            </li>
+                            <li th:if="${imgCount>1}"><a class="img_a" href="#"><img class="smallBookPic"
+                                                                                     th:src="${imgurls_1[1]}"
+                                                                                     alt=""></a></li>
+                            <li th:if="${imgCount>2}"><a class="img_a" href="#"><img class="smallBookPic"
+                                                                                     th:src="${imgurls_1[2]}"
+                                                                                     alt=""></a></li>
+                            <li th:if="${imgCount>3}"><a class="img_a" href="#"><img class="smallBookPic"
+                                                                                     th:src="${imgurls_1[3]}"
+                                                                                     alt=""></a></li>
+                            <li th:if="${imgCount>4}"><a class="img_a" href="#"><img class="smallBookPic"
+                                                                                     th:src="${imgurls_1[4]}"
+                                                                                     alt=""></a></li>
                         </ul>
                     </div>
                     <div th:if="${imgCount>5}">
                         <ul class="bookPic_slide_ul">
-                            <li th:if="${imgCount>5}"><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_2[0]}" alt=""></a></li>
-                            <li th:if="${imgCount>6}"><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_2[1]}" alt=""></a></li>
-                            <li th:if="${imgCount>7}"><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_2[2]}" alt=""></a></li>
-                            <li th:if="${imgCount>8}"><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_2[3]}" alt=""></a></li>
-                            <li th:if="${imgCount>9}"><a class="img_a" href="#"><img class="smallBookPic" th:src="${imgurls_2[4]}" alt=""></a></li>
+                            <li th:if="${imgCount>5}"><a class="img_a" href="#"><img class="smallBookPic"
+                                                                                     th:src="${imgurls_2[0]}"
+                                                                                     alt=""></a></li>
+                            <li th:if="${imgCount>6}"><a class="img_a" href="#"><img class="smallBookPic"
+                                                                                     th:src="${imgurls_2[1]}"
+                                                                                     alt=""></a></li>
+                            <li th:if="${imgCount>7}"><a class="img_a" href="#"><img class="smallBookPic"
+                                                                                     th:src="${imgurls_2[2]}"
+                                                                                     alt=""></a></li>
+                            <li th:if="${imgCount>8}"><a class="img_a" href="#"><img class="smallBookPic"
+                                                                                     th:src="${imgurls_2[3]}"
+                                                                                     alt=""></a></li>
+                            <li th:if="${imgCount>9}"><a class="img_a" href="#"><img class="smallBookPic"
+                                                                                     th:src="${imgurls_2[4]}"
+                                                                                     alt=""></a></li>
                         </ul>
                     </div>
                 </div>
@@ -75,7 +97,8 @@
                     <div class="messbox_info">
                         <span>作者：<a href="#" th:text="${session.bookMsgDTO.author}"></a></span>
                         <span>出版社：<a href="#" th:text="${session.bookMsgDTO.press}"></a></span>
-                        <span>发行日期：<a style="display: inline-block" href="#" ><span id="publish-date" th:text="${#dates.format(session.bookMsgDTO.releaseDate,'yyyy-MM-dd HH:mm')}"></span></a></span>
+                        <span>发行日期：<a style="display: inline-block" href="#"><span id="publish-date"
+                                                                                   th:text="${#dates.format(session.bookMsgDTO.releaseDate,'yyyy-MM-dd HH:mm')}"></span></a></span>
                         <span></span>
                     </div>
                     <!--价格区-->
@@ -95,27 +118,27 @@
                             </div>
                         </div>
                     </div>
-<!--                    书籍关联区-->
+                    <!--                    书籍关联区-->
                     <div class="cuxiao_info choose_xilie clearfix">
                         <div class="left">关联商品</div>
                         <div class="right">
                             <div class="clearfix">
                                 <ul class="list_e">
                                     <li>
-                                        <a class="btn btn-default  jia_gou_e chosen" href="#" >
-                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="" >
+                                        <a class="btn btn-default  jia_gou_e chosen" href="#">
+                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="">
                                             <span th:text="${session.bookMsgDTO.bookName}"></span>
                                         </a>
-                                        <a class="btn btn-default  jia_gou_e chosen" href="#" >
-                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="" >
+                                        <a class="btn btn-default  jia_gou_e chosen" href="#">
+                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="">
                                             <span th:text="${session.bookMsgDTO.bookName}"></span>
                                         </a>
-                                        <a class="btn btn-default  jia_gou_e chosen" href="#" >
-                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="" >
+                                        <a class="btn btn-default  jia_gou_e chosen" href="#">
+                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="">
                                             <span th:text="${session.bookMsgDTO.bookName}"></span>
                                         </a>
-                                        <a class="btn btn-default  jia_gou_e chosen" href="#" >
-                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="" >
+                                        <a class="btn btn-default  jia_gou_e chosen" href="#">
+                                            <img class="small_pic_1" th:src="${imgurls_1[0]}" alt="">
                                             <span th:text="${session.bookMsgDTO.bookName}"></span>
                                         </a>
                                     </li>
@@ -123,7 +146,7 @@
                             </div>
                         </div>
                     </div>
-<!--                    购买按钮区-->
+                    <!--                    购买按钮区-->
                     <div class="buy-btn-area">
                         <div class="">
                             <a href="/books/buy" class="layui-btn buy-btn">
@@ -131,11 +154,28 @@
                                 <i style="color: whitesmoke">购买</i>
                             </a>
                         </div>
-                        <div class="">
-                            <a href="http://www.layui.com" class="layui-btn layui-btn-warm buy-btn">
-                                <i class="layui-icon layui-icon-cart-simple" style="font-size: 30px; color: #1E9FFF;"></i>
+                        <div class="addCartDiv">
+                            <button class="layui-btn layui-btn-warm buy-btn" id="buy_btn" th:onclick="add()">
+                                <i class="layui-icon layui-icon-cart-simple"
+                                   style="font-size: 30px; color: #1E9FFF;"></i>
                                 加入购物车
-                            </a>
+                            </button>
+                        </div>
+                    </div>
+                    <!--                    加入购物车成功提示-->
+                    <div id="addCartSuccess" style="margin: 0 auto" class="modal fade bs-example-modal-sm addBtn" data-backdrop="false" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-sm" style="margin-top: 20%" role="document">
+                            <div id="addSuccessModal" style="margin: 0 auto" class=" modal-content">
+                                <span class="addSuccess glyphicon glyphicon-ok" style="color: limegreen; background-color: rgba(0,0,0,0);"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="addCartFail" style="margin: 0 auto" class="modal fade bs-example-modal-sm addBtn" data-backdrop="false" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-sm" style="margin-top: 20%" role="document">
+                            <div id="addFailModal" style="margin: 0 auto" class=" modal-content">
+                                <span class="addSuccess glyphicon glyphicon-remove" style="color: limegreen; background-color: rgba(0,0,0,0);"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,28 +217,61 @@
     //     })
     // })
     $("#bookPicDiv").ready(function () {
-        if ($(".smallBookPic")[1].src == "unkoown" ) {
+        if ($(".smallBookPic")[1].src == "unkoown") {
             alert("111")
         }
     })
 
-function dianji(thisParameter){
-    $(".jia_gou_e").css("background-color","white")//清空颜色
-    $(thisParameter).css("background-color","pink")//再添加颜色
-}
+    function dianji(thisParameter) {
+        $(".jia_gou_e").css("background-color", "white")//清空颜色
+        $(thisParameter).css("background-color", "black")//再添加颜色
+    }
 
     $("body").ready(function () {
         var text = $("#bookName").text();
-        $.post("/books/selectBook",{bookName:text},function (data) {
-            var similarBook=data;
-            for (var i=0;i<=similarBook.length;i++){
-                var pic=similarBook[i].imgUrl.split("~");
-                var bookA="<a  onclick='dianji(this)' id='bookNum"+i+"' class='btn btn-default jia_gou_e chosen' href='#'><img class='small_pic_1' src='"+pic[0]+"' alt='' ><span>"+similarBook[i].bookName+"</span></a>"
+        $.post("/books/selectBook", {bookName: text}, function (data) {
+            var similarBook = data;
+            for (var i = 0; i <= similarBook.length; i++) {
+                var pic = similarBook[i].imgUrl.split("~");
+                var bookA = "<a  onclick='dianji(this)' id='bookNum" + i + "' class='btn btn-default jia_gou_e chosen' href='#'><img class='small_pic_1' src='" + pic[0] + "' alt='' ><span>" + similarBook[i].bookName + "</span></a>"
                 $("#similarBookLi").append(bookA);
             }
 
         })
     });
+
+    function add() {
+        var username = $("#login_username").text();
+        var bookId = getUrlParam("bookId");
+        $.ajax({
+            url: "/books/shopCart/add",
+            type: "POST",
+            data: {username: username, bookId: bookId},
+            dataType: "json",
+            success: function (data) {
+                $("#addCartSuccess").modal("show");
+                setTimeout(function () {
+                    $("#addCartSuccess").modal("hide");
+                }, 1000);
+            },
+            error:function () {
+                $("#addCartFail").modal("show");
+                setTimeout(function () {
+                    $("#addCartFail").modal("hide");
+                    window.location.href = "/user/login";
+                }, 1000);
+
+            }
+        })
+    }
+
+    //获取url的请求参数
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]);
+        return null; //返回参数值
+    }
 
 </script>
 </body>
