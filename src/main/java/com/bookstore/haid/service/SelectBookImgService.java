@@ -13,7 +13,7 @@ public class SelectBookImgService {
     private SelectBookImgMapper bookImgMapper;
 
     public List<BookMsg> findAllImg(Integer typeId) {
-        List<BookMsg> allImg = bookImgMapper.findAllImg(typeId);
+        List<BookMsg> allImg = bookImgMapper.findAll(typeId);
         return allImg;
     }
 }

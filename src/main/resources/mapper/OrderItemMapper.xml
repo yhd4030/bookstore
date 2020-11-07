@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookstore.haid.mapper.OrderItemMapper">
+    <insert id="insertItem">
+
+    insert into book_orderitem
+     values
+        <foreach collection='orderItems' item='item' index='index' separator=','>
+            (#{item.id},#{item.order_id},#{item.book_id},#{item.count})
+        </foreach>
+    </insert>
+
+
+    <delete id="deleteBooksInCart">
+        delete from book_shopcart where
+         id in
+        <foreach collection="cartIds" item="item" open="(" separator="," close=")" >
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

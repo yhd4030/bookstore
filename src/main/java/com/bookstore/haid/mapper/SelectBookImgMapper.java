@@ -11,5 +11,5 @@ import java.util.List;
 @Component
 public interface SelectBookImgMapper {
     @Select("select * from book_Msg where typeId=#{typeId}")
-    List<BookMsg> findAllImg(Integer typeId);
+    List<BookMsg> findAll(Integer typeId);
 }

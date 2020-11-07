@@ -22,8 +22,7 @@ public class CheckBookMsgController {
     private CheckBookService checkBookService;
 //查看书的信息
     @RequestMapping(value = "/books", method = RequestMethod.GET)
-    public String checkBook(@RequestParam("typeId") Integer typeId,
-                            @RequestParam("bookId") Integer bookId,
+    public String checkBook(@RequestParam("bookId") Integer bookId,
                             HttpServletRequest request,
                             Model model) {
 //接收页面传来的bookId进行书的查找
@@ -55,10 +54,10 @@ public class CheckBookMsgController {
         return similarBook;
     }
 
-    @GetMapping("/books/buy")
-    public String buyBook(){
-
-        return "buyBook";
-
-    }
+//    @GetMapping("/books/buy")
+//    public String buyBook(Integer bookId){
+//        checkBookService.buy(bookId);
+//        return "buyBook";
+//
+//    }
 }

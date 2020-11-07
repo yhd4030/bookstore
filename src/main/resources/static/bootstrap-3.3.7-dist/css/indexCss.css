@@ -1,5 +1,5 @@
 html{
-    background-color: rgba(60,179,113,0.1);
+    /*background-color: rgba(60,179,113,0.1);*/
 }
 body{
     background-color: rgba(60,179,113,0.1);
@@ -7,7 +7,7 @@ body{
 #bd_auto{
     width: 100%;
     margin: 0 auto;
-    background-color: rgba(60,179,113,0.1);
+    /*background-color: rgba(60,179,113,0.1);*/
 }
 .layui-nav-item a:hover,.layui-nav-item a:active{
     text-decoration: none;
@@ -24,15 +24,15 @@ body{
     border: 2px black solid;
     text-align: center;
 }
-#indexDiv ul {
-    display: inline-block;
-    width: 200px;
-    height: 400px;
-    /*position: absolute;*/
-    margin-right: 150px;
-    margin-left: 140px;
-    border: 2px black solid;
-}
+/*#indexDiv ul {*/
+/*    display: inline-block;*/
+/*    width: 200px;*/
+/*    height: 400px;*/
+/*    !*position: absolute;*!*/
+/*    margin-right: 150px;*/
+/*    margin-left: 140px;*/
+/*    border: 2px black solid;*/
+/*}*/
 #slideshowDiv{
     left: 0;
     top: 0;
@@ -126,3 +126,7 @@ body{
     font-family: Arial;
     font-size: 13px;
 }
+#classifyHead .layui-this{
+    color: #5FB878; font-weight: bold;
+}
+

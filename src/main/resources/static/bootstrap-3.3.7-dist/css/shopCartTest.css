@@ -7,15 +7,16 @@
     border: 1px solid green;
     margin-top: 0px;
     position: relative;
+    padding-left: 0px;
 
 }
 .wuPinShow {
     height: 500px;
-    width: 1320px;
+    width: auto;
     border: 1px solid green;
     overflow-x: auto;
     overflow-y: unset;
-    padding: 0px;
+    margin: 0 16%;
 }
 .wuPinLan{
     width: 1000px;
@@ -54,6 +55,13 @@
     width: 125px;
     height: 125px;
 
+}
+.wuPinImg{
+    padding-left: 0px;
+}
+.container-fluid{
+    /*margin-left: 0px;*/
+    margin-right: 0px;
 }
 
 

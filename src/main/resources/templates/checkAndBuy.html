@@ -149,7 +149,8 @@
                     <!--                    购买按钮区-->
                     <div class="buy-btn-area">
                         <div class="">
-                            <a href="/books/buy" class="layui-btn buy-btn">
+                            <a  th:href="'/order/infoByBuy?bookId='+${session.bookMsgDTO.bookId}"
+                               class="layui-btn buy-btn">
                                 <i class="layui-icon layui-icon-ok" style="font-size: 30px; color: #5FB878;"></i>
                                 <i style="color: whitesmoke">购买</i>
                             </a>
@@ -163,18 +164,22 @@
                         </div>
                     </div>
                     <!--                    加入购物车成功提示-->
-                    <div id="addCartSuccess" style="margin: 0 auto" class="modal fade bs-example-modal-sm addBtn" data-backdrop="false" tabindex="-1" role="dialog">
+                    <div id="addCartSuccess" style="margin: 0 auto" class="modal fade bs-example-modal-sm addBtn"
+                         data-backdrop="false" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-sm" style="margin-top: 20%" role="document">
                             <div id="addSuccessModal" style="margin: 0 auto" class=" modal-content">
-                                <span class="addSuccess glyphicon glyphicon-ok" style="color: limegreen; background-color: rgba(0,0,0,0);"></span>
+                                <span class="addSuccess glyphicon glyphicon-ok"
+                                      style="color: limegreen; background-color: rgba(0,0,0,0);"></span>
                             </div>
                         </div>
                     </div>
 
-                    <div id="addCartFail" style="margin: 0 auto" class="modal fade bs-example-modal-sm addBtn" data-backdrop="false" tabindex="-1" role="dialog">
+                    <div id="addCartFail" style="margin: 0 auto" class="modal fade bs-example-modal-sm addBtn"
+                         data-backdrop="false" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-sm" style="margin-top: 20%" role="document">
                             <div id="addFailModal" style="margin: 0 auto" class=" modal-content">
-                                <span class="addSuccess glyphicon glyphicon-remove" style="color: limegreen; background-color: rgba(0,0,0,0);"></span>
+                                <span class="addSuccess glyphicon glyphicon-remove"
+                                      style="color: limegreen; background-color: rgba(0,0,0,0);"></span>
                             </div>
                         </div>
                     </div>
@@ -254,7 +259,7 @@
                     $("#addCartSuccess").modal("hide");
                 }, 1000);
             },
-            error:function () {
+            error: function () {
                 $("#addCartFail").modal("show");
                 setTimeout(function () {
                     $("#addCartFail").modal("hide");
@@ -264,6 +269,19 @@
             }
         })
     }
+
+    // function submitOrder(bookId) {
+    //     alert(bookId)
+    //     $.ajax({
+    //         method: "post",
+    //         url: "/order/details",
+    //         data: {bookIdStr: bookId},
+    //         dataType: "json",
+    //         success: function (data) {
+    //             window.location.href = "/order/info";
+    //         }
+    //     });
+    // }
 
     //获取url的请求参数
     function getUrlParam(name) {

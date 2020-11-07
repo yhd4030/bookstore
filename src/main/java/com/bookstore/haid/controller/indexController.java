@@ -27,8 +27,7 @@ public class indexController {
     private LoginService loginService;
 
     @GetMapping({"/","/index"})
-    public String index(HttpServletRequest request, HttpServletResponse response){
-//        loginService.checkUser(request);
+    public String index(){
         return "index";
     }
 

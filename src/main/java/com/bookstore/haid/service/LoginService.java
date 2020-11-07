@@ -24,16 +24,10 @@ public class LoginService implements UserDetailsService {
     @Autowired
     private PasswordEncoderUtil passwordEncoderUtil;
 
-//    public void checkUser(HttpServletRequest request) {
-//        HttpSession session = request.getSession(true);
-//        String username = (String) session.getAttribute("username");
-//        User checkUser = loginMapper.checkUser(username);
-//        session.setAttribute("user",checkUser);
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-
+//字符串s 为表单传过来的username
         User user = loginMapper.checkUser(s);
         List<SimpleGrantedAuthority> authorities =new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole()));

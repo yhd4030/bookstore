@@ -3,7 +3,8 @@
 
 <body>
 <div th:fragment="nav">
-    <ul class="layui-nav" lay-filter="">
+    <ul class="layui-nav">
+
         <li class="layui-nav-item "><a href="/">Haid-BookShop</a></li>
         <!--        登录-->
         <li class="layui-nav-item navbar-right nav_hover">
@@ -16,12 +17,13 @@
                 <i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">
                     <span id="login_username" th:text="${#httpServletRequest.remoteUser}" style="font-size: 19px"></span>
                 </i>
+
                 <i class="layui-icon layui-icon-triangle-d" style="font-size: 15px; color: #1E9FFF;"></i>
             </span>
             <ul id="dropdown-menu" class="dropdown-menu">
-                <li><a href="/user/information"><i class="layui-icon layui-icon-user" style="font-size: 30px; color: #1E9FFF;"></i><span>个人信息</span></a></li>
-                <li><a href="#"><i class="layui-icon layui-icon-notice" style="font-size: 30px; color: #1E9FFF;"></i><span>通知</span></a></li>
-                <li><a href="#"><i class="layui-icon layui-icon-set" style="font-size: 30px; color: #1E9FFF;"></i><span>设置</span></a></li>
+                <li><a href="/user/information"><i class="layui-icon layui-icon-user" style="font-size: 30px; color: #1E9FFF;"></i><span style="color:#1E9FFF ">个人信息</span></a></li>
+                <li><a href="#"><i class="layui-icon layui-icon-notice" style="font-size: 30px; color: #1E9FFF;"></i><span style="color:#1E9FFF ">通知</span></a></li>
+                <li><a href="#"><i class="layui-icon layui-icon-set" style="font-size: 30px; color: #1E9FFF;"></i><span style="color:#1E9FFF ">设置</span></a></li>
                 <li role="separator" class="divider"></li>
                 <li>
                     <a id="logoutBtn" href="/user/logout">
@@ -35,14 +37,22 @@
                 </li>
             </ul>
         </li>
+        <li class="layui-nav-item navbar-right nav_hover">
+            <a th:href="@{'/order/list'}">
+                <i class="layui-icon layui-icon-tabs" style="font-size: 30px; color: #1E9FFF;"></i>
+                <span style="color: #1E9FFF">我的订单</span>
 
+            </a>
+
+        </li>
         <!--        购物车-->
         <li class="layui-nav-item navbar-right nav_hover">
             <a th:href="@{'/books/shopCart?username='+${#httpServletRequest.remoteUser}}">
                 <i class="layui-icon layui-icon-cart-simple" style="font-size: 30px; color: #1E9FFF;"></i>
+                <span style="color: #1E9FFF">购物车</span>
             </a>
-
         </li>
+
         <!--        主页-->
         <li class="layui-nav-item navbar-right nav_hover">
             <a href="/">

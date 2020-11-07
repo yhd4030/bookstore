@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/dropdown.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBook.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBook_2.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/shopCartTest.css}">
+    <link rel="stylesheet" th:href="@{/css/jquery-confirm.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/order_info.css}">
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}" type="application/javascript"></script>
+    <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/jquery-confirm.js}" type="text/javascript"></script>
+    <script th:src="@{/js/domlastic.js}" type="text/javascript"></script>
+
+</head>
+<body style="background-color: rgba(60,179,113,0.1);">
+<div th:insert="~{navigation ::nav}"></div>
+<div class="container">
+
+    <div th:if="${orderInfoDTOS}==null" class="row">
+        <h1 class="h1">亲，您还没有已提交的订单，<a href="">再逛一逛吧!</a></h1>
+        <img src="img/empty.png" alt="您暂时没有订单">
+    </div>
+
+
+    <div class="row">
+        <h1 class="title order_title">订单列表</h1>
+    </div>
+
+    <div class="row" id="order_table_div">
+        <table id="order_table" border="0" cellpadding="0" cellspacing="0">
+            <thead>
+            <tr id="table_head">
+                <th width="10%" class="tcol1">订单编号</th>
+                <th width="30%" class="tcol1">买了什么</th>
+                <th width="10%">订单状态</th>
+                <th width="10%">金额</th>
+                <th width="15%">收货地址</th>
+                <th width="25%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="order_item" th:id="'orderItem'+${orderInfoDTO.id}" th:each="orderInfoDTO:${orderInfoDTOS}">
+
+                <td>
+                    <span th:text="${orderInfoDTO.order_num}"></span>
+                </td>
+                <td style="text-align: center" >
+                    <div  th:each="orderItem:${orderInfoDTO.orderItem}">
+                        <span th:text="${orderItem.count} +X"></span>
+                        <a th:href="'/books?bookId='+${orderItem.bookMsg.bookId}"  target="_blank" title="${orderDetail.bookName}" style="width: 50px;height: 50px">
+                            <img th:src="${orderItem.bookMsg.imgUrl}" style="width: 40px" />
+                            <span th:text="${orderItem.bookMsg.bookName}"></span>
+                        </a>
+                    </div>
+
+
+                </td>
+                <td>
+<!--                    三目运算符嵌套 先判断是否支付，再判断是否完成-->
+                    <span th:text=" ${orderInfoDTO.order_status}=='4'?'完成订单':(${orderInfoDTO.order_status}=='1'?'支付成功':'未支付')"></span>
+                </td>
+                <td>
+
+                    <span class="red" th:text="￥+${orderInfoDTO.order_total}"></span>
+                </td>
+                <td>
+                    <span th:text="${orderInfoDTO.address.province}+${orderInfoDTO.address.city}+${orderInfoDTO.address.area}+${orderInfoDTO.address.detail_address}"></span>
+                </td>
+                <td>
+<!--                    订单状态为0 未支付-->
+                    <div th:if="${orderInfoDTO.order_status.equals('0')}">
+                        <button type="button" class="btn btn-info btn-xs" th:onclick="|toPay(${orderInfoDTO.id})|">
+                            去支付
+                        </button>
+                        <button type="button" class="btn btn-xs btn-danger"
+                                th:onclick="|deleteOrder(${orderInfoDTO.id})|">
+                            取消订单
+                        </button>
+                    </div>
+<!--                    订单状态为1 已支付-->
+                    <div th:if="${not orderInfoDTO.order_status.equals('0')}">
+                        <button th:id="'complete'+${orderInfoDTO.id}" th:if="${not orderInfoDTO.order_status.equals('4')}" type="button" class="btn btn-xs btn-info"
+                                th:onclick="|confirmReceiving(${orderInfoDTO.id})|">
+                            确认收货
+                        </button>
+                        <button type="button" class="btn btn-xs btn-info" onclick="lookShipping()">
+                            查看物流
+                        </button>
+                        <button type="button" class="btn btn-xs btn-danger" th:onclick="|deleteOrder(${orderInfoDTO.id})|">
+                            删除订单
+                        </button>
+                    </div>
+
+
+
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+
+    function toPay(id) {
+        window.location.href="/order/orderPay?id="+id;
+    }
+
+    function confirmReceiving(id) {
+        var $completeItem = $("#complete" + id);
+        $.confirm({
+            title: '确认',
+            content: '您确认收到商品了？',
+            type: 'green',
+            buttons: {
+                ok: {
+                    text: "确定",
+                    btnClass: 'btn-success',
+                    keys: ['enter'],
+                    action: function () {
+                        $.ajax({
+                            method: "post",
+                            url: "/order/completeOrder",
+                            data: {id: id},
+                            dataType: "json",
+                            success: function (data) {
+                                if (data==true){
+                                    domLastic.init({
+                                        itemsClassnameToConnect: 'cart_item', //类选择器
+                                        itemsJointStrength: 10, //value optimum between 10 - 100
+                                        animationSpeed: 500, //value optimum 300 - 1000 动画速度
+                                        animationIntensity: 0.6, //value optimum optimum 0.5 - 1
+                                        animationDirection: 'horizontal', //动画方向
+                                        callback: function () {
+                                            console.log('anim finished');
+                                        }
+                                    });
+                                    domLastic.animateItems();
+                                    $($completeItem).slideToggle(150, function () {
+                                        $($completeItem).remove();
+                                        //aniamte ListItems
+                                        domLastic.animateItems();
+                                    });
+                                }
+
+                            }
+                        });
+                    }
+                },
+                cancel: {
+                    text: "取消"
+                }
+            }
+        });
+    }
+
+    function deleteOrder(id){
+        var $deleteItem = $("#orderItem" + id);
+        $.confirm({
+            title: '删除',
+            content: '您确定删除这个订单？',
+            type: 'red',
+            buttons: {
+                ok: {
+                    text: "确定",
+                    btnClass: 'btn-danger',
+                    keys: ['enter'],
+                    action: function () {
+                        $.ajax({
+                            method: "post",
+                            url: "/order/deleteOrder",
+                            data: {id: id},
+                            dataType: "json",
+                            success: function (data) {
+                                if (data==true){
+                                    domLastic.init({
+                                        itemsClassnameToConnect: 'cart_item', //类选择器
+                                        itemsJointStrength: 10, //value optimum between 10 - 100
+                                        animationSpeed: 500, //value optimum 300 - 1000 动画速度
+                                        animationIntensity: 0.6, //value optimum optimum 0.5 - 1
+                                        animationDirection: 'horizontal', //动画方向
+                                        callback: function () {
+                                            console.log('anim finished');
+                                        }
+                                    });
+                                    domLastic.animateItems();
+                                    $($deleteItem).slideToggle(150, function () {
+                                        $($deleteItem).remove();
+                                        //aniamte ListItems
+                                        domLastic.animateItems();
+                                    });
+                                }
+                            }
+                        })
+
+
+                    }
+                },
+                cancel: {
+                    text: "取消"
+                }
+            }
+        });
+    }
+
+</script>
+</html>

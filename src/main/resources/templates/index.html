@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org " xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/indexCss.css">
+
 
     <script src="js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript"></script>
@@ -34,13 +35,14 @@
             <div><img src="images/dd10.jpg"></div>
         </div>
     </div>
-    <div class="layui-tab">
-        <ul id="classifyHead" class="layui-tab-title">
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul id="classifyHead" class="title-list layui-tab-title">
             <li id="tab1" class="layui-this">主打</li>
             <li id="tab2">小说</li>
             <li id="tab3">文艺</li>
             <li id="tab4">社会科学</li>
             <li id="tab5">生活</li>
+            <p><b></b></p>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -67,18 +69,14 @@
         </div>
     </div>
 </div>
-
-
-<script th:src="@{/layui/dropdown.js}" type="text/javascript"></script>
 <script th:src="@{/layui/layui.js}" type="text/javascript"></script>
-
 <script>
     //注意：导航 依赖 element 模块，否则无法进行功能性操作
-    layui.use(['element', 'carousel','layedit', 'laydate'], function () {
+    layui.use(['element', 'carousel', 'layedit', 'laydate'], function () {
         var element = layui.element
             , carousel = layui.carousel
             , $ = layui.jquery
-            ,layer = layui.layer;
+            , layer = layui.layer;
 
 
         // $("#logoutBtn").click(function () {
@@ -104,7 +102,7 @@
         });
         //…
     });
-    //请求书的图片
+    // 请求书的图片
     $("#tab1").ready(function () {
         var typeId = 1;
         $.ajax({
@@ -115,15 +113,15 @@
             success: function (data) {
 
                 for (var i = 0; i < data.length; i++) {
-                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?bookId=" + data[i].bookId + "'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
-                        "<span>"+data[i].bookPrice+"</span>" +
+                        "<span>" + data[i].bookPrice + "</span>" +
                         "<span>.00<span>" +
                         "</span>" +
                         "</p>";
-                    var imgurl=data[i].imgUrl.split("~");
-                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + imgurl[0]+ "' alt=''></a>" + bookP + "</li>";
+                    var imgurl = data[i].imgUrl.split("~");
+                    var bookLi = "<li> <a href='/books?bookId=" + data[i].bookId + "'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
                     $("#tab1_bookClassify").append(bookLi);
                 }
             }
@@ -138,15 +136,15 @@
             dataType: "json",
             success: function (data) {
                 for (var i = 0; i < data.length; i++) {
-                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?bookId=" + data[i].bookId + "'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
-                        "<span>"+data[i].bookPrice+"</span>" +
+                        "<span>" + data[i].bookPrice + "</span>" +
                         "<span>.00<span>" +
                         "</span>" +
                         "</p>";
-                    var imgurl=data[i].imgUrl.split("~");
-                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
+                    var imgurl = data[i].imgUrl.split("~");
+                    var bookLi = "<li> <a href='/books?bookId=" + data[i].bookId + "'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
                     $("#tab2_bookClassify").append(bookLi);
                 }
             }
@@ -162,15 +160,15 @@
             success: function (data) {
 
                 for (var i = 0; i < data.length; i++) {
-                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a style='height: 25px' href='/books?bookId=" + data[i].bookId + "'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
-                        "<span>"+data[i].bookPrice+"</span>" +
+                        "<span>" + data[i].bookPrice + "</span>" +
                         "<span>.00<span>" +
                         "</span>" +
                         "</p>";
-                    var imgurl=data[i].imgUrl.split("~");
-                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
+                    var imgurl = data[i].imgUrl.split("~");
+                    var bookLi = "<li> <a href='/books?bookId=" + data[i].bookId + "'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
                     $("#tab3_bookClassify").append(bookLi);
                 }
             }
@@ -186,15 +184,15 @@
             success: function (data) {
 
                 for (var i = 0; i < data.length; i++) {
-                    var bookP = "<p class='bookName'><a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"' style='height: 25px'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a href='/books?bookId=" + data[i].bookId + "' style='height: 25px'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
-                        "<span>"+data[i].bookPrice+"</span>" +
+                        "<span>" + data[i].bookPrice + "</span>" +
                         "<span>.00<span>" +
                         "</span>" +
                         "</p>";
-                    var imgurl=data[i].imgUrl.split("~");
-                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
+                    var imgurl = data[i].imgUrl.split("~");
+                    var bookLi = "<li> <a href='/books?bookId=" + data[i].bookId + "'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
                     $("#tab4_bookClassify").append(bookLi);
                 }
             }
@@ -211,20 +209,22 @@
 
                 for (var i = 0; i < data.length; i++) {
 
-                    var bookP = "<p class='bookName'><a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"' style='height: 25px '>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
+                    var bookP = "<p class='bookName'><a href='/books?bookId=" + data[i].bookId + "' style='height: 25px '>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
                         "<span>¥</span>" +
-                        "<span>"+data[i].bookPrice+"</span>" +
+                        "<span>" + data[i].bookPrice + "</span>" +
                         "<span>.00<span>" +
                         "</span>" +
                         "</p>";
-                    var imgurl=data[i].imgUrl.split("~");
-                    var bookLi = "<li> <a href='/books?typeId="+data[i].typeId+"&bookId="+data[i].bookId+"'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
+                    var imgurl = data[i].imgUrl.split("~");
+                    var bookLi = "<li> <a href='/books?bookId=" + data[i].bookId + "'> <img src='" + imgurl[0] + "' alt=''></a>" + bookP + "</li>";
                     $("#tab5_bookClassify").append(bookLi);
                 }
             }
         });
     });
+
+
 
 </script>
 </body>

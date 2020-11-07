@@ -39,6 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //authenticated()登录认证 hasAuthority("")权限认证 如果用户不是普通会员则不能访问
                 .antMatchers("/books/buy").hasAuthority("普通会员")
                 .antMatchers("/books/shopCart","/books/shopCart/**").authenticated()
+                .antMatchers("/order","/order/**").authenticated()
+
 //                .antMatchers("/books/shopCart/add").authenticated()
                 .anyRequest().authenticated()//其他请求都需要认证
                 .and()
@@ -65,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/bootstrap-3.3.7-dist/**", "/images/**", "/js/**", "/layui/**");
+        web.ignoring().antMatchers("/bootstrap-3.3.7-dist/**", "/css/**","/images/**", "/js/**", "/layui/**");
     }
 
 
