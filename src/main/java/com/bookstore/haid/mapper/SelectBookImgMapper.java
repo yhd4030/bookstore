@@ -10,6 +10,6 @@ import java.util.List;
 @Mapper
 @Component
 public interface SelectBookImgMapper {
-    @Select("select * from book_Msg where typeId=#{typeId}")
+    @Select("select * from book_msg where typeId=#{typeId}")
     List<BookMsg> findAll(Integer typeId);
 }
