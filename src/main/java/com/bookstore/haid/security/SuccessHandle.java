@@ -25,7 +25,6 @@ public class SuccessHandle implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-
         String username=authentication.getName();
         HttpSession session = httpServletRequest.getSession(true);
         session.setAttribute("username",username);

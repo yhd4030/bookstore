@@ -110,7 +110,7 @@
                     <button type="button" th:onclick="saveUser()" class="btn btn-default">保存基本信息</button>
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#passwordModal">修改密码
                     </button>
-                    <span class="red">${saveMsg}</span>
+                    <span class="red" id="saveMsg"></span>
                 </div>
             </div>
         </form>
@@ -299,8 +299,8 @@
                         $("#deatails").val(data.detail_address)
                         $("#receiver").val(data.receiver)
                         $("#tel").val(data.tel)
-                        if (data.is_default=="on"){
-                            $("#setDefaultAddr").prop("checked",true);
+                        if (data.is_default == "on") {
+                            $("#setDefaultAddr").prop("checked", true);
                         }
                     }
                 }
@@ -333,8 +333,9 @@
             }
         })
     }
+
     //删除收货地址
-    function delAddress(addressId){
+    function delAddress(addressId) {
         $.confirm({
             title: '删除',
             content: '您确定删除这样商品？',
@@ -348,7 +349,7 @@
                         $.ajax({
                             method: "post",
                             url: "/address/del",
-                            data: {addressId:addressId},
+                            data: {addressId: addressId},
                             success: function (data) {
                                 if (data == true) {
                                     window.location.reload(true)
@@ -363,6 +364,7 @@
             }
         });
     }
+
     $(function () {
         jQuery.validator.addMethod("isMobile", function (value, element) {
             var length = value.length;
@@ -462,14 +464,21 @@
             submitHandler: function (form) {
                 $.ajax({
                     type: 'post',
-                    url: 'user/password/${sessionScope.loginUser.userId}',
+                    url: '/user/updatePwd',
                     data: $("#passwordForm").serialize(),
                     success: function (data) {
-                        if (data.code == 200) {
-                            alert(data.message)
-                            $('#passwordModal').modal('hide')
+                        if (data == true) {
+
+                            $('#passwordModal').modal('hide');
+                            $("#saveMsg").text("修改密码成功！！");
+                            setTimeout(function () {
+                                $("#saveMsg").hide()
+                            }, 2000)
                         } else {
-                            alert(data.message)
+                            $("#saveMsg").text("修改密码失败！！");
+                            setTimeout(function () {
+                                $("#saveMsg").clear();
+                            }, 2000)
                         }
                         $('#oldPassword').val("");
                         $('#oldPassword').focus();

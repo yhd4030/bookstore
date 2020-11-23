@@ -35,17 +35,23 @@
      bu.username=ba.user_id and
      username=#{username};
 </select>
-<update id="updateUser">
-    update book_user bu
-    set
-     bu.name=#{name},
-     bu.sex=#{sex},
-     bu.phone=#{phone},
-     bu.location=#{location},
-     bu.detail_address=#{detail_address},
-     bu.email=#{email},
-     bu.zip_code=#{zip_code},
-     bu.identity=#{identity}
-     where username=#{username}
-</update>
+    <update id="updateUser">
+        update book_user bu
+        set
+         bu.name=#{name},
+         bu.sex=#{sex},
+         bu.phone=#{phone},
+         bu.location=#{location},
+         bu.detail_address=#{detail_address},
+         bu.email=#{email},
+         bu.zip_code=#{zip_code},
+         bu.identity=#{identity}
+         where username=#{username}
+    </update>
+    <update id="updatepwd">
+    update book_user set password=#{password} where username=#{username}
+    </update>
+    <select id="checkPwd" resultMap="userMap">
+        select password from book_user where username=#{username}
+    </select>
 </mapper>
