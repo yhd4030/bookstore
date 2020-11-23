@@ -16,11 +16,13 @@ public interface OrderMapper {
 
     List<OrderInfoDTO> selectOrderInfo(@Param(value = "username")String username);
 
-    Order findOrderById(Integer id);
+    OrderInfoDTO findOrderById(@Param(value = "id")Integer id,@Param(value = "username")String username);
 
     BookMsg selectBookMsgByBookId(Integer bookId);
 
     Boolean OrderStatusUpdate(@Param(value = "status")String status,@Param(value = "id")Integer id);
 
     Boolean deleteOrderById(Integer id);
+
+    Order findIdByOrderNum(String order_num);
 }

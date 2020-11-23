@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookstore.haid.mapper.AddressMapper">
+
+    <select id="findAddress" resultType="com.bookstore.haid.model.Address">
+        select * from book_address where user_id=#{username};
+    </select>
+
+    <insert id="savaAddress">
+        insert into book_address
+        values
+        (#{id},#{user_id},#{province},#{city},#{area},#{detail_address},#{receiver},#{tel},#{is_default});
+    </insert>
+
+    <select id="findById" resultType="com.bookstore.haid.model.Address">
+        select  * from book_address where id=#{id};
+    </select>
+
+    <update id="updateAddress">
+        update book_address set
+         province=#{province},
+         city=#{city},
+         area=#{area} ,
+         detail_address=#{detail_address} ,
+         receiver=#{receiver} ,
+         tel=#{tel},
+         is_default=#{is_default}  where id=#{id} ;
+    </update>
+    <delete id="delById">
+        delete from book_address where id=#{addressId};
+    </delete>
+    <select id="findIsDefault" resultType="com.bookstore.haid.model.Address">
+        select * from book_address where is_default='on';
+    </select>
+    <update id="updateIsDefault">
+        update book_address set is_default='off' where id=#{id};
+    </update>
+</mapper>

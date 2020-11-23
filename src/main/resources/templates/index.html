@@ -78,29 +78,17 @@
             , $ = layui.jquery
             , layer = layui.layer;
 
-
-        // $("#logoutBtn").click(function () {
-        //         layer.open({
-        //             type: 1,
-        //             content: '传入任意的文本或html' //这里content是一个普通的String
-        //         });
-        //
-        // })
-
-
         $(".layui-tab-title li").hover(function () {
             var $i = $(this).index();
             $(this).addClass("layui-this").siblings().removeClass("layui-this");
             $(".layui-tab-content .layui-tab-item").eq($i).addClass("layui-show").siblings().removeClass("layui-show");
         });
-
         carousel.render({
             elem: '#slideshowDiv'
             , width: '60%' //设置容器宽度
             , arrow: 'always' //始终显示箭头
             , anim: 'default' //切换动画方式
         });
-        //…
     });
     // 请求书的图片
     $("#tab1").ready(function () {
@@ -111,7 +99,6 @@
             data: {typeId: typeId},
             dataType: "json",
             success: function (data) {
-
                 for (var i = 0; i < data.length; i++) {
                     var bookP = "<p class='bookName'><a style='height: 25px' href='/books?bookId=" + data[i].bookId + "'>" + data[i].bookName + "</a></p><p class='bookPrice'>" +
                         "<span class='rob'>" +
@@ -223,9 +210,6 @@
             }
         });
     });
-
-
-
 </script>
 </body>
 </html>

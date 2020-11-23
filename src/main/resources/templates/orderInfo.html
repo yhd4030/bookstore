@@ -269,7 +269,17 @@
         if (val == null) {
             confirm("请选择地址");
         } else {
-            window.location.href = "/order/commit?addressId=" + val + "&OrderTotal=" + total;
+            $.ajax({
+                method: "post",
+                url: "/order/commit",
+                data: {addressId:val,OrderTotal:total},
+                success: function (data) {
+                    if (data!=null) {
+                        window.location.href = "/order/toPay?id="+data;
+                    }
+                }
+            })
+            // window.location.href = "/order/commit?addressId=" + val + "&OrderTotal=" + total;
         }
     }
 </script>

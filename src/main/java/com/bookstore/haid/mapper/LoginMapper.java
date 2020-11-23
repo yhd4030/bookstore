@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 public interface LoginMapper {
-    @Select("select * from user where username=#{username}")
+    @Select("select * from book_user where username=#{username}")
     User checkUser(String username);
 
-    @Select("select * from user where username=#{username}")
+    @Select("select * from book_user where username=#{username}")
     User accountName(String username);
 }

@@ -54,8 +54,19 @@
 
     </select>
 
-    <select id="findOrderById" resultType="com.bookstore.haid.model.Order">
-        select * from book_order where id=#{id};
+    <select id="findOrderById" resultMap="orderInfoMap">
+        SELECT bo.*,
+    ba.id addressId,ba.province,ba.city,ba.area,ba.detail_address,ba.receiver,ba.tel,
+    boi.`id` order_item_id,boi.`book_id`,
+    bm.bookId,bm.`imgUrl`,bm.`bookName`,bm.bookDescription,
+    boi.`count`
+    FROM book_order bo,book_orderitem boi,book_address ba,book_msg bm
+    WHERE
+     bo.`order_num`=boi.`order_id` AND
+     bo.`address_id`=ba.`id` AND
+     boi.`book_id`=bm.`bookId` AND
+     bo.`user_id`=#{username} AND
+     bo.id=#{id};
     </select>
     <select id="selectBookMsgByBookId" resultType="com.bookstore.haid.model.BookMsg">
         select * from book_msg where bookId=#{bookId};
@@ -66,4 +77,8 @@
     <delete id="deleteOrderById">
         delete from book_order where id=#{id};
     </delete>
+
+    <select id="findIdByOrderNum" resultType="com.bookstore.haid.model.Order">
+        select id from book_order where order_num=#{order_num};
+    </select>
 </mapper>

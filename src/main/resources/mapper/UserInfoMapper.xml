@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookstore.haid.mapper.UserInfoMapper">
+
+<resultMap id="userMap" type="com.bookstore.haid.model.User">
+    <id property="id" column="id"></id>
+    <result property="username" column="username"></result>
+    <result property="password" column="password"></result>
+    <result property="name" column="name"></result>
+    <result property="sex" column="sex"></result>
+    <result property="phone" column="phone"></result>
+    <result property="location" column="location"></result>
+    <result property="detail_address" column="detail_address"></result>
+    <result property="email" column="email"></result>
+    <result property="zip_code" column="zip_code"></result>
+    <result property="identity" column="identity"></result>
+    <collection property="address" ofType="com.bookstore.haid.model.Address">
+            <id property="id" column="addressId"></id>
+            <result property="user_id" column="user_id"></result>
+            <result property="province" column="province"></result>
+            <result property="city" column="city"></result>
+            <result property="area" column="area"></result>
+            <result property="detail_address" column="detail_address"></result>
+            <result property="receiver" column="receiver"></result>
+            <result property="tel" column="tel"></result>
+            <result property="is_default" column="is_default"></result>
+    </collection>
+</resultMap>
+<select id="findUserById" resultMap="userMap">
+    select
+     bu.id,bu.username,bu.password,bu.name,bu.sex,bu.phone,bu.location,bu.email,bu.zip_code,bu.identity,
+     ba.id addressId,ba.user_id,ba.province,ba.city,ba.area,ba.detail_address ,ba.receiver,ba.tel,ba.is_default
+     from book_user bu,book_address ba
+     where
+     bu.username=ba.user_id and
+     username=#{username};
+</select>
+<update id="updateUser">
+    update book_user bu
+    set
+     bu.name=#{name},
+     bu.sex=#{sex},
+     bu.phone=#{phone},
+     bu.location=#{location},
+     bu.detail_address=#{detail_address},
+     bu.email=#{email},
+     bu.zip_code=#{zip_code},
+     bu.identity=#{identity}
+     where username=#{username}
+</update>
+</mapper>

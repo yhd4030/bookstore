@@ -74,8 +74,8 @@ public class OrderService {
         return orderInfoDTOS;
     }
 
-    public Order findOrderById(Integer id) {
-        Order orderById = orderMapper.findOrderById(id);
+    public OrderInfoDTO findOrderById(Integer id,String username) {
+        OrderInfoDTO orderById = orderMapper.findOrderById(id, username);
         return orderById;
     }
 
@@ -102,5 +102,11 @@ public class OrderService {
     public Boolean deleteOrderById(Integer id) {
         Boolean aBoolean = orderMapper.deleteOrderById(id);
         return aBoolean;
+    }
+
+    public Order findIdByOrderNum(String order_num) {
+        return orderMapper.findIdByOrderNum(order_num);
+
+
     }
 }

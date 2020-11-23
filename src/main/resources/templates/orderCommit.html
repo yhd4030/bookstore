@@ -29,26 +29,26 @@
         <div class="things">
             <form th:action="@{/order/aliPay}" method="post">
                 <p>
-                    <span>订单号：</span>
+                    <label style="width: 70px">订单号：</label>
                     <input type="text" name="out_trade_no" th:value="${order.order_num}" readonly >
                 </p>
-                <p>
-                    <span>商品名称：</span>
-                    <input type="text" name="subject" th:value="${order.id}"  >
+                <p hidden="hidden">
+                    <label>商品名称：</label>
+                    <input type="text" name="subject" th:value="${order.orderItem.get(0).bookMsg.bookId}"  >
                 </p>
-                <p>
-                    <span>商品描述：</span>
-                    <input type="text" name="body" th:value="${order.id}" readonly>
+                <p hidden="hidden">
+                    <label >商品描述：</label>
+                    <input type="text" name="body" th:value="${order.orderItem.get(0).bookMsg.bookId}" readonly>
                 </p>
-                <p>
-                    <span>商品码：</span>
-                    <input type="text" name="product_code" th:value="${order.id}" readonly>
+                <p hidden="hidden">
+                    <label>商品码：</label>
+                    <input type="text" name="product_code" th:value="${order.orderItem.get(0).bookMsg.bookId}" readonly>
                 </p>
                 <p hidden="hidden">
                     <input type="text" name="timeout_express" value="1h" >
                 </p>
                 <p>
-                    <span>支付金额：</span>
+                    <label>支付金额：</label>
                     <input type="text" name="total_amount" th:value="${order.order_total}+'0'" >
                 </p>
                 <div class="next_div">
