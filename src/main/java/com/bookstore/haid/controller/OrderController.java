@@ -6,12 +6,10 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.bookstore.haid.dto.OrderInfoDTO;
-import com.bookstore.haid.model.Address;
-import com.bookstore.haid.model.Order;
-import com.bookstore.haid.model.Pay;
-import com.bookstore.haid.model.ShopCart;
+import com.bookstore.haid.model.*;
 import com.bookstore.haid.service.AddressService;
 import com.bookstore.haid.service.OrderService;
+import com.bookstore.haid.service.UserInfoService;
 import com.bookstore.haid.utils.AlipayConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +29,8 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private UserInfoService userInfoService;
 
     //订单信息页面
     @RequestMapping("/info")
@@ -42,6 +42,8 @@ public class OrderController {
         for (ShopCart shopCart : checkBooks) {
             countMoney = countMoney + shopCart.getSubTotal();
         }
+        User user = userInfoService.findUserById(username);
+        model.addAttribute("user", user);
         model.addAttribute("checkBooks", checkBooks);
         model.addAttribute("countMoney", countMoney);
         model.addAttribute("addressList", address);

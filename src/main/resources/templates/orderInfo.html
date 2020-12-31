@@ -18,6 +18,8 @@
     <script th:src="@{/js/distpicker/distpicker.data.js}" type="application/javascript"></script>
     <script th:src="@{/js/distpicker/distpicker.js}" type="application/javascript"></script>
     <script th:src="@{/js/distpicker/main.js}" type="application/javascript"></script>
+    <script th:src="@{/js/jquery-confirm.js}" type="text/javascript"></script>
+
 
 </head>
 <body style="background-color: rgba(60,179,113,0.1);">
@@ -55,14 +57,18 @@
     <div class="row">
         <h1 class="title order_title">收货人信息</h1>
         <ul class="list-group" style="width: 600px">
-            <li th:each="address:${addressList}" th:if="not ${#lists.isEmpty(addressList)}" class="list-group-item">
-                <input type="radio" name="addr" th:checked="${address.is_default}=='on'" th:value="${address.id}">
+            <li th:each="address:${user.address}" th:if="not ${#lists.isEmpty(user.address)}"
+                class="list-group-item">
+                <input type="radio" name="addr" th:checked="${address.is_default}=='on'"
+                       th:value="${address.id}">
                 <span th:text=" ${address.receiver}+' '+ ${address.tel}+'  '+${address.province}+${address.city}+${address.area}+${address.detail_address}"></span>
                 <span th:if="${address.is_default}=='on'"><a href="#" style="font-size: 10px">默认地址</a></span>
-                <span><a href="#" style="font-size: 10px">修改</a></span>
-                <span><a href="#" style="font-size: 10px">删除</a></span>
+                <span><a href="javascript:void(0);" th:onclick="|addAddress(${address.id})|"
+                         style="font-size: 10px">修改</a></span>
+                <span><a href="javascript:void(0);" th:onclick="|delAddress(${address.id})|"
+                         style="font-size: 10px">删除</a></span>
             </li>
-            <li th:if=" ${#lists.isEmpty(addressList)}" class="list-group-item">暂无地址，请添加。</li>
+            <li th:if=" ${#lists.isEmpty(user.address)}" class="list-group-item">暂无地址，请添加。</li>
         </ul>
         <button type="button" class="btn btn-info" onclick="addAddress()">点击添加地址</button>
     </div>
@@ -175,7 +181,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="gridSystemModalLabel">添加地址</h4>
             </div>
@@ -183,19 +190,28 @@
                 <form action="#" id="savaAddress" class="form-horizontal" role="form">
                     <div class="form-group">
                         <label class="col-md-2 control-label" style="width: 100px">所在地区：</label>
-                        <div data-toggle="distpicker">
+                        <div data-toggle="distpicker" id="target">
                             <div class="form-group col-sm-12 col-md-3">
                                 <label class="sr-only" for="province1">Province</label>
-                                <select class="form-control" id="province1" name="province"></select>
+                                <select class="form-control province1" id="province1" name="province"></select>
                             </div>
                             <div class="form-group col-sm-12 col-md-3">
                                 <label class="sr-only" for="city1">City</label>
-                                <select class="form-control" id="city1" name="city"></select>
+                                <select class="form-control city1" id="city1" name="city"></select>
                             </div>
                             <div class="form-group col-sm-12 col-md-3">
                                 <label class="sr-only" for="area1">Area</label>
-                                <select class="form-control" id="area1" name="area"></select>
+                                <select class="form-control area1" id="area1" name="area"></select>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback" style="">
+                        <label class="col-sm-2 control-label" style="width: 100px"> 地址编号：</label>
+                        <div class="col-sm-5" style="padding-left: 0px">
+                            <input type="text" class="form-control" id="addressId" name="id"
+                                   placeholder="地址编号" readonly>
+                            <span class=" form-control-feedback"></span>
                         </div>
                     </div>
 
@@ -209,7 +225,8 @@
                     <div class="form-group has-feedback" style="">
                         <label class="col-sm-2 control-label" style="width: 100px"> 姓名：</label>
                         <div class="col-sm-5" style="padding-left: 0px">
-                            <input type="text" class="form-control" id="receiver" name="receiver" placeholder="收货人姓名">
+                            <input type="text" class="form-control" id="receiver" name="receiver"
+                                   placeholder="收货人姓名">
                             <span class="glyphicon glyphicon-user form-control-feedback"></span>
                         </div>
                     </div>
@@ -245,10 +262,50 @@
 </body>
 <script>
 
-    function addAddress() {
+    // 打开修改地址模态框
+    function addAddress(addressId) {
         $("#addAddress").modal("show");
-    }
+        //data不为空修改地址 为空增加地址
+        if (addressId != null) {
+            $.ajax({
+                method: "post",
+                url: "/address/find",
+                data: {addressId: addressId},
+                success: function (data) {
+                    if (data != null) {
+                        $("#target").distpicker('destroy');
+                        $("#target").distpicker({
+                            province: data.province,
+                            city: data.city,
+                            district: data.area
+                        });
+                        $("#addressId").val(data.id);
+                        $("#deatails").val(data.detail_address);
+                        $("#receiver").val(data.receiver);
+                        $("#tel").val(data.tel);
+                        if (data.is_default == "on") {
+                            $("#setDefaultAddr").prop("checked", true);
+                        }else{
+                            $("#setDefaultAddr").prop("checked", false);
+                        }
+                    }
+                }
+            });
+        } else {
+            $("#target").distpicker('destroy');
+            $("#target").distpicker({
+                province: "",
+                city: "",
+                district: ""
+            });
+            $("#addressId").val("");
+            $("#deatails").val("");
+            $("#receiver").val("");
+            $("#tel").val("");
+        }
 
+    }
+    //提交地址
     function savaAddress() {
         var addressData = $("#savaAddress").serialize();
         $.ajax({
@@ -261,6 +318,37 @@
                 }
             }
         })
+    }
+
+    //删除收货地址
+    function delAddress(addressId) {
+        $.confirm({
+            title: '删除',
+            content: '您确定删除这样商品？',
+            type: 'red',
+            buttons: {
+                ok: {
+                    text: "确定",
+                    btnClass: 'btn-danger',
+                    keys: ['enter'],
+                    action: function () {
+                        $.ajax({
+                            method: "post",
+                            url: "/address/del",
+                            data: {addressId: addressId},
+                            success: function (data) {
+                                if (data == true) {
+                                    window.location.reload(true)
+                                }
+                            }
+                        })
+                    }
+                },
+                cancel: {
+                    text: "取消"
+                }
+            }
+        });
     }
 
     function commitOrder() {

@@ -141,14 +141,6 @@
         </div>
     </div>
 
-    <!--        <div class="page-header">-->
-    <!--&lt;!&ndash;        <h1>&ndash;&gt;-->
-    <!--&lt;!&ndash;            <span class="glyphicon glyphicon-cog"></span>&ndash;&gt;-->
-    <!--&lt;!&ndash;            安全中心&ndash;&gt;-->
-    <!--&lt;!&ndash;        </h1>&ndash;&gt;-->
-    <!--    </div>-->
-
-
     <!-- 模态框（Modal） -->
     <!--修改密码-->
     <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel"
@@ -383,16 +375,7 @@
             errorElement: 'span',
             errorClass: "red",
             rules: {
-                identity: {
-                    required: true
-                },
-                username: {
-                    required: true
-                },
-                location: {
-                    required: true
-                },
-                detailAddress: {
+                name: {
                     required: true
                 },
                 phone: {
@@ -401,26 +384,49 @@
                 },
                 sex: {
                     required: true
+                },
+                email: {
+                    required: true
+                },
+                location: {
+                    required: true
+
+                },
+                detailAddress: {
+                    required: true
+
+                },
+                zip_code: {
+                    required: true
+                },
+                identity: {
+                    required: true
                 }
             },
             messages: {
-                identity: {
-                    required: "请选择"
-                },
-                username: {
-                    required: "昵称不能为空"
-                },
-                location: {
-                    required: "居住地不能为空"
-                },
-                detailAddress: {
-                    required: "请填写详细地址"
+                name: {
+                    required: "请输入用户名"
                 },
                 phone: {
-                    required: "请输入手机号"
+                    required: "请输入电话号码"
                 },
                 sex: {
                     required: "请输入性别"
+                },
+                email: {
+                    required: "请填写邮箱"
+                },
+                location: {
+                    required: "请输入地方"
+                },
+                detailAddress: {
+                    required: "请输入详细地址"
+                },
+                zip_code: {
+                    required: "请输入邮政编码"
+                },
+                identity: {
+                    required: "请输入职业"
                 }
             }
         });
