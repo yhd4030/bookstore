@@ -79,6 +79,6 @@
     </delete>
 
     <select id="findIdByOrderNum" resultType="com.bookstore.haid.model.Order">
-        select id from book_order where order_num=#{order_num};
+        select id,order_num,create_date,user_id,order_total,address_id,order_status from book_order where order_num=#{order_num};
     </select>
 </mapper>
