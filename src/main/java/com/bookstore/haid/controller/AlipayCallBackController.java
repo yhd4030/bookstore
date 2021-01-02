@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +32,10 @@ public class AlipayCallBackController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("alipay_callback")
+    @RequestMapping(value = "/alipay_callback", method = RequestMethod.POST)
     @ResponseBody
     public String callback(HttpServletRequest request) {
+        System.out.println("----------------");
         Map<String, String> params = convertRequestParamsToMap(request);
         String paramsJson = JSON.toJSONString(params);
         logger.info("支付宝回调，{}", paramsJson);
