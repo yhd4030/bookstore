@@ -53,7 +53,7 @@ public class AlipayCallBackController {
                             try {
                                 //修改订单状态
                                 String out_trade_no = params.get("out_trade_no");
-                                orderService.updateOrderStatus(out_trade_no);
+                                orderService.updateOrderStatus(out_trade_no,"1");
                                 System.out.println("------订单已经付款------");
                             } catch (Exception e) {
                                 logger.error("支付宝回调业务处理报错,params:"+ paramsJson,e);

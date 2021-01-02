@@ -26,5 +26,5 @@ public interface OrderMapper {
 
     Order findIdByOrderNum(String order_num);
 
-    void updateOrderStatus(String order_num);
+    void updateOrderStatus(@Param(value = "order_num")String order_num,@Param(value = "status")String status);
 }

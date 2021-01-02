@@ -110,7 +110,7 @@ public class OrderService {
 
     }
 
-    public void updateOrderStatus(String order_num) {
-        orderMapper.updateOrderStatus(order_num);
+    public void updateOrderStatus(String order_num,String status) {
+        orderMapper.updateOrderStatus(order_num,status);
     }
 }
