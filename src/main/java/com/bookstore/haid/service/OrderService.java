@@ -109,4 +109,8 @@ public class OrderService {
 
 
     }
+
+    public void updateOrderStatus(String order_num) {
+        orderMapper.updateOrderStatus(order_num);
+    }
 }

@@ -81,4 +81,7 @@
     <select id="findIdByOrderNum" resultType="com.bookstore.haid.model.Order">
         select id,order_num,create_date,user_id,order_total,address_id,order_status from book_order where order_num=#{order_num};
     </select>
+    <update id="updateOrderStatus">
+        update book_order set order_status=#{status} where order_num=#{order_num};
+    </update>
 </mapper>

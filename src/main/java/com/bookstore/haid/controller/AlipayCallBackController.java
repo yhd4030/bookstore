@@ -7,7 +7,6 @@ import com.bookstore.haid.model.AlipayNotifyParam;
 import com.bookstore.haid.model.Order;
 import com.bookstore.haid.service.OrderService;
 import com.bookstore.haid.utils.AlipayConfig;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -53,7 +51,10 @@ public class AlipayCallBackController {
                         //支付成功
                         if (trade_status.equals("TRADE_SUCCESS")) {
                             try {
-
+                                //修改订单状态
+                                String out_trade_no = params.get("out_trade_no");
+                                orderService.updateOrderStatus(out_trade_no);
+                                System.out.println("------订单已经付款------");
                             } catch (Exception e) {
                                 logger.error("支付宝回调业务处理报错,params:"+ paramsJson,e);
                             }

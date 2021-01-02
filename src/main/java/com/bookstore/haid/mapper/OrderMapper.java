@@ -25,4 +25,6 @@ public interface OrderMapper {
     Boolean deleteOrderById(Integer id);
 
     Order findIdByOrderNum(String order_num);
+
+    void updateOrderStatus(String order_num);
 }
