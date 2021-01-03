@@ -57,7 +57,7 @@
     <div class="row">
         <h1 class="title order_title">收货人信息</h1>
         <ul class="list-group" style="width: 600px">
-            <li th:each="address:${user.address}" th:if="not ${#lists.isEmpty(user.address)}"
+            <li th:each="address:${addressList}" th:if="not ${#lists.isEmpty(addressList)}"
                 class="list-group-item">
                 <input type="radio" name="addr" th:checked="${address.is_default}=='on'"
                        th:value="${address.id}">
@@ -68,7 +68,7 @@
                 <span><a href="javascript:void(0);" th:onclick="|delAddress(${address.id})|"
                          style="font-size: 10px">删除</a></span>
             </li>
-            <li th:if=" ${#lists.isEmpty(user.address)}" class="list-group-item">暂无地址，请添加。</li>
+            <li th:if=" ${#lists.isEmpty(addressList)}" class="list-group-item">暂无地址，请添加。</li>
         </ul>
         <button type="button" class="btn btn-info" onclick="addAddress()">点击添加地址</button>
     </div>
