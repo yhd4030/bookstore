@@ -52,8 +52,10 @@
                     <input type="text" name="total_amount" th:value="${order.order_total}+'0'" >
                 </p>
                 <div class="next_div">
-                    <button type="submit" class="toCart">支付</button>
+                    <button type="submit" th:if="${order.order_status}==0" class="toCart">支付</button>
+                    <a href="javascript:void(0);" th:if="${order.order_status}==1" class="toShopping" style="background-color: rgb(139,202,58)">付款成功</a>
                     <a href="/order/list" class="toShopping">查看所有订单</a>
+
                 </div>
             </form>
 

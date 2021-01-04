@@ -14,7 +14,10 @@ import com.bookstore.haid.utils.AlipayConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -76,7 +79,7 @@ public class OrderController {
     }
 
     @GetMapping("/toPay")
-    public String toPay(Integer id,Model model,HttpSession session) {
+    public String toPay(Integer id, Model model, HttpSession session) {
         String username = (String) session.getAttribute("username");
         OrderInfoDTO orderById = orderService.findOrderById(id, username);
         model.addAttribute("order", orderById);
@@ -135,7 +138,8 @@ public class OrderController {
     public String pay(Pay pay) throws AlipayApiException {
         AlipayConfig alipayConfig = new AlipayConfig();
         //1.封装Rsa签名方式
-        AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.URL,
+        AlipayClient alipayClient = new DefaultAlipayClient(
+                alipayConfig.URL,
                 alipayConfig.APPID,
                 alipayConfig.RSA_PRIVATE_KEY,
                 alipayConfig.FORMAT,
@@ -153,8 +157,8 @@ public class OrderController {
         model.setTimeoutExpress(pay.getTimeout_express());//支付超时时间
         model.setTotalAmount(pay.getTotal_amount());//商品金额
         request.setBizModel(model);
-        request.setNotifyUrl(alipayConfig.notify_url);
-        request.setReturnUrl(alipayConfig.return_url);
+        request.setNotifyUrl(AlipayConfig.notify_url);
+        request.setReturnUrl(AlipayConfig.return_url);
         String form = alipayClient.pageExecute(request).getBody();
         System.out.println(form);
         return form;

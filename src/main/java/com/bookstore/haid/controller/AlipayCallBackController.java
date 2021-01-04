@@ -32,10 +32,10 @@ public class AlipayCallBackController {
     @Autowired
     private OrderService orderService;
 
-    @RequestMapping(value = "/alipay_callback", method = RequestMethod.POST)
+    @RequestMapping("/alipay_callback")
     @ResponseBody
     public String callback(HttpServletRequest request) {
-        System.out.println("----------------");
+        System.out.println("--------异步调用成功--------");
         Map<String, String> params = convertRequestParamsToMap(request);
         String paramsJson = JSON.toJSONString(params);
         logger.info("支付宝回调，{}", paramsJson);
@@ -57,13 +57,26 @@ public class AlipayCallBackController {
                                 //修改订单状态
                                 String out_trade_no = params.get("out_trade_no");
                                 orderService.updateOrderStatus(out_trade_no,"1");
-                                System.out.println("------订单已经付款------");
+                                System.out.println("------订单付款成功------");
                             } catch (Exception e) {
                                 logger.error("支付宝回调业务处理报错,params:"+ paramsJson,e);
                             }
                         }else {
                             logger.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}",trade_status,paramsJson);
                         }
+                        if (trade_status.equals("TRADE_FINISHED")) {
+                            try {
+                                //修改订单状态
+                                String out_trade_no = params.get("out_trade_no");
+                                orderService.updateOrderStatus(out_trade_no,"1");
+                                System.out.println("------订单已经付款，请勿重复付款------");
+                            } catch (Exception e) {
+                                logger.error("支付宝回调业务处理报错,params:"+ paramsJson,e);
+                            }
+                        }else {
+                            logger.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}",trade_status,paramsJson);
+                        }
+
                     }
                 });
                 // 如果签名验证正确，立即返回success，后续业务另起线程单独处理

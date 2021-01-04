@@ -34,7 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/index", "/books", "/user/login").permitAll() // /和/home请求不需要拦截
+                .antMatchers("/", "/index", "/books", "/user/login").permitAll()// /和/home请求不需要拦截
+                .antMatchers("/alipay_callback").permitAll() 
 //                .antMatchers(HttpMethod.POST).permitAll()
                 .antMatchers(HttpMethod.GET, "/tab_selectBook").permitAll()
                 //authenticated()登录认证 hasAuthority("")权限认证 如果用户不是普通会员则不能访问
