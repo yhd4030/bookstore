@@ -3,6 +3,7 @@ package com.bookstore.haid.controller;
 import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.bookstore.haid.dto.OrderInfoDTO;
 import com.bookstore.haid.model.AlipayNotifyParam;
 import com.bookstore.haid.model.Order;
 import com.bookstore.haid.service.OrderService;
@@ -11,9 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +32,9 @@ public class AlipayCallBackController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * 支付宝异步回调
+     */
     @RequestMapping("/alipay_callback")
     @ResponseBody
     public String callback(HttpServletRequest request) {
@@ -56,25 +59,25 @@ public class AlipayCallBackController {
                             try {
                                 //修改订单状态
                                 String out_trade_no = params.get("out_trade_no");
-                                orderService.updateOrderStatus(out_trade_no,"1");
+                                orderService.updateOrderStatus(out_trade_no, "1");
                                 System.out.println("------订单付款成功------");
                             } catch (Exception e) {
-                                logger.error("支付宝回调业务处理报错,params:"+ paramsJson,e);
+                                logger.error("支付宝回调业务处理报错,params:" + paramsJson, e);
                             }
-                        }else {
-                            logger.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}",trade_status,paramsJson);
+                        } else {
+                            logger.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}", trade_status, paramsJson);
                         }
                         if (trade_status.equals("TRADE_FINISHED")) {
                             try {
                                 //修改订单状态
                                 String out_trade_no = params.get("out_trade_no");
-                                orderService.updateOrderStatus(out_trade_no,"1");
+                                orderService.updateOrderStatus(out_trade_no, "1");
                                 System.out.println("------订单已经付款，请勿重复付款------");
                             } catch (Exception e) {
-                                logger.error("支付宝回调业务处理报错,params:"+ paramsJson,e);
+                                logger.error("支付宝回调业务处理报错,params:" + paramsJson, e);
                             }
-                        }else {
-                            logger.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}",trade_status,paramsJson);
+                        } else {
+                            logger.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}", trade_status, paramsJson);
                         }
 
                     }
@@ -89,6 +92,45 @@ public class AlipayCallBackController {
         } catch (AlipayApiException e) {
             logger.error("支付宝回调签名认证失败,paramsJson:{},errorMsg:{}", paramsJson, e.getMessage());
             return "failure";
+        }
+    }
+/**
+ * 支付宝同步回调
+ * */
+    @RequestMapping("/return_callback")
+    public String returnCallback(HttpServletRequest request, Model model) {
+        System.out.println("--------同步调用成功--------");
+        OrderInfoDTO orderInfoDTO = new OrderInfoDTO();
+        Map<String, String> params = convertRequestParamsToMap(request);
+        String paramsJson = JSON.toJSONString(params);
+        try {
+            AlipayConfig alipayConfig = new AlipayConfig();
+            boolean signVerified = AlipaySignature.rsaCheckV1(params, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, AlipayConfig.SIGNTYPE);
+            if (signVerified) {
+                //按照支付结果异步通知中描述，对支付结果中的业务内容进行1\2\3\4二次校验，校验成功后在response中返回success，校验失败返回failure
+                this.check(params);
+                AlipayNotifyParam param = buildAliPayNotifyParam(params);
+                String trade_status = param.getTradeStatus();
+                Double totalAmount = param.getTotalAmount().doubleValue();
+                String outTradeNo = param.getOutTradeNo();
+                if (trade_status.equals("TRADE_SUCCESS")) {
+                    orderInfoDTO.setOrder_status(trade_status);
+                    orderInfoDTO.setOrder_total(totalAmount);
+                    orderInfoDTO.setOrder_num(outTradeNo);
+                    model.addAttribute("order", orderInfoDTO);
+                    return "returnCallback";
+                }
+                model.addAttribute("error","订单处理失败，请联系管理员处理！！！");
+                return "returnCallback";
+            } else {
+                logger.info("支付宝回调签名认证失败，signVerified=false, paramsJson:{}", paramsJson);
+                model.addAttribute("error","订单验签失败，请联系管理员处理！！！");
+                return "returnCallback";
+            }
+        } catch (AlipayApiException e) {
+            logger.error("支付宝回调签名认证失败,paramsJson:{},errorMsg:{}", paramsJson, e.getMessage());
+            model.addAttribute("error","订单异常，请联系管理员处理！！！");
+            return "returnCallback";
         }
     }
 

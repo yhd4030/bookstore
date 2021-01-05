@@ -19,7 +19,7 @@
     <script th:src="@{/js/distpicker/main.js}" type="application/javascript"></script>
 
 </head>
-<body>
+<body style="background-color: rgba(60,179,113,0.1);">
 <div th:insert="~{navigation ::nav}"></div>
 <div class="container" style="border: 4px solid #f5f5f5;">
     <div class="tip_div">
@@ -30,26 +30,26 @@
             <form th:action="@{/order/aliPay}" method="post">
                 <p>
                     <label style="width: 70px">订单号：</label>
-                    <input type="text" name="out_trade_no" th:value="${order.order_num}" readonly >
+                    <input type="text" name="out_trade_no" th:value="${order.order_num}" value="0" readonly >
                 </p>
                 <p hidden="hidden">
                     <label>商品名称：</label>
-                    <input type="text" name="subject" th:value="${order.orderItem.get(0).bookMsg.bookId}"  >
+                    <input type="text" name="subject" th:value="${order.orderItem.get(0).bookMsg.bookId}" value="0" >
                 </p>
                 <p hidden="hidden">
                     <label >商品描述：</label>
-                    <input type="text" name="body" th:value="${order.orderItem.get(0).bookMsg.bookId}" readonly>
+                    <input type="text" name="body" th:value="${order.orderItem.get(0).bookMsg.bookId}" value="0" readonly>
                 </p>
                 <p hidden="hidden">
                     <label>商品码：</label>
-                    <input type="text" name="product_code" th:value="${order.orderItem.get(0).bookMsg.bookId}" readonly>
+                    <input type="text" name="product_code" th:value="${order.orderItem.get(0).bookMsg.bookId}" value="0" readonly>
                 </p>
                 <p hidden="hidden">
                     <input type="text" name="timeout_express" value="1h" >
                 </p>
                 <p>
                     <label>支付金额：</label>
-                    <input type="text" name="total_amount" th:value="${order.order_total}+'0'" >
+                    <input type="text" name="total_amount" th:value="${order.order_total}+'0'" value="0" >
                 </p>
                 <div class="next_div">
                     <button type="submit" th:if="${order.order_status}==0" class="toCart">支付</button>
