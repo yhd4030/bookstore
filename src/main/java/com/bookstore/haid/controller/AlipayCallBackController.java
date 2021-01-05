@@ -94,9 +94,10 @@ public class AlipayCallBackController {
             return "failure";
         }
     }
-/**
- * 支付宝同步回调
- * */
+
+    /**
+     * 支付宝同步回调
+     */
     @RequestMapping("/return_callback")
     public String returnCallback(HttpServletRequest request, Model model) {
         System.out.println("--------同步调用成功--------");
@@ -109,27 +110,24 @@ public class AlipayCallBackController {
             if (signVerified) {
                 //按照支付结果异步通知中描述，对支付结果中的业务内容进行1\2\3\4二次校验，校验成功后在response中返回success，校验失败返回failure
                 this.check(params);
-                AlipayNotifyParam param = buildAliPayNotifyParam(params);
-                String trade_status = param.getTradeStatus();
-                Double totalAmount = param.getTotalAmount().doubleValue();
-                String outTradeNo = param.getOutTradeNo();
-                if (trade_status.equals("TRADE_SUCCESS")) {
-                    orderInfoDTO.setOrder_status(trade_status);
+                Double totalAmount = Double.valueOf(params.get("total_amount"));
+                String outTradeNo = params.get("out_trade_no");
+                if (outTradeNo != null && totalAmount != null) {
                     orderInfoDTO.setOrder_total(totalAmount);
                     orderInfoDTO.setOrder_num(outTradeNo);
                     model.addAttribute("order", orderInfoDTO);
                     return "returnCallback";
                 }
-                model.addAttribute("error","订单处理失败，请联系管理员处理！！！");
+                model.addAttribute("error", "订单处理失败，请联系管理员处理！！！");
                 return "returnCallback";
             } else {
                 logger.info("支付宝回调签名认证失败，signVerified=false, paramsJson:{}", paramsJson);
-                model.addAttribute("error","订单验签失败，请联系管理员处理！！！");
+                model.addAttribute("error", "订单验签失败，请联系管理员处理！！！");
                 return "returnCallback";
             }
         } catch (AlipayApiException e) {
             logger.error("支付宝回调签名认证失败,paramsJson:{},errorMsg:{}", paramsJson, e.getMessage());
-            model.addAttribute("error","订单异常，请联系管理员处理！！！");
+            model.addAttribute("error", "订单异常，请联系管理员处理！！！");
             return "returnCallback";
         }
     }
