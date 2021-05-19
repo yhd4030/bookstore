@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bookstore.haid.mapper.CheckBookMapper">
+    <resultMap id="BookMsgResultMap" type="com.bookstore.haid.dto.BookMsgDTO">
+        <id property="bookId" column="bookId"/>
+        <result property="bookName" column="bookName"/>
+        <result property="imgUrl" column="imgUrl"/>
+        <result property="typeId" column="typeId"/>
+        <result property="typeId" column="typeId"/>
+        <result property="bookPrice" column="bookPrice"/>
+        <result property="bookDescription" column="bookDescription"/>
+        <result property="discount" column="discount"/>
+        <result property="detail_id" column="detail_id"/>
+        <result property="amount" column="amount"/>
+        <result property="isShelf" column="isShelf"/>
+        <result property="publish_Id" column="publish_Id"/>
+        <association property="bookPublish" javaType="com.bookstore.haid.model.BookPublish">
+            <id property="id" column="id"/>
+            <result property="author" column="author"/>
+            <result property="press" column="press"/>
+            <result property="releaseDate" column="releaseDate"/>
+        </association>
+    </resultMap>
+
+    <select id="checkAllMsg" resultMap="BookMsgResultMap">
+        SELECT bm.*, bp.*
+        FROM book_msg bm
+                     LEFT JOIN book_publish bp ON bm.publish_Id = bp.`id`
+        WHERE bm.`bookId` = #{bookId}
+    </select>
+    <select id="similarBook" resultType="com.bookstore.haid.model.BookMsg">
+        select *
+        from book_msg
+        where bookName like CONCAT('%', #{bookName}, '%')
+    </select>
+</mapper>

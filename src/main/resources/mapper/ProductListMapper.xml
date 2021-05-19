@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookstore.haid.mapper.ProductListMapper">
+    <!--    <select id="findProductByTypeId" resultType="com.cmx.mall.model.ShopProduct">-->
+    <!--    select * from shop_product where typeId=#{typeId}-->
+    <!--    </select>-->
+
+    <select id="findAllProduct" resultType="com.bookstore.haid.model.BookMsg">
+        select *
+        from book_msg
+        <where>
+            <if test="keywords != null and keywords != ''">
+                bookName like concat('%', #{keywords}, '%')
+            </if>
+        </where>
+    </select>
+
+    <update id="updateIsShelf">
+        update book_msg
+        set isShelf=#{isShelf}
+        where bookId = #{bookId}
+    </update>
+    <delete id="deleteBookById">
+        delete
+        from book_msg
+        where bookId = #{id}
+    </delete>
+
+    <update id="updateProduct">
+        update book_msg
+        <set>
+            <if test="bookName != null and bookName != ''">
+                bookName=#{bookName},
+            </if>
+            <if test="bookPrice != null">
+                bookPrice=#{bookPrice},
+            </if>
+            <if test="imgUrl != null and imgUrl != ''">
+                imgUrl=#{imgUrl},
+            </if>
+            <if test="bookDescription != null and bookDescription != ''">
+                bookDescription=#{bookDescription},
+            </if>
+            <if test="discount != null">
+                discount=#{discount},
+            </if>
+            <if test="typeId != null">
+                typeId=#{typeId},
+            </if>
+            <if test="amount != null">
+                amount=#{amount},
+            </if>
+            <if test="isShelf != null">
+                isShelf=#{isShelf},
+            </if>
+        </set>
+        where bookId = #{bookId}
+    </update>
+    <!--&lt;!&ndash;    <update id="updateCategory">&ndash;&gt;-->
+    <!--&lt;!&ndash;        update shop_productcategory set `type`=#{type}&ndash;&gt;-->
+    <!--&lt;!&ndash;    </update>&ndash;&gt;-->
+
+    <update id="updatePublishById">
+        update book_publish
+        <set>
+            <if test="author != null and author != ''">
+                author=#{author},
+            </if>
+            <if test="press != null and press != ''">
+                press=#{press},
+            </if>
+            <if test="releaseDate != null">
+                releaseDate=#{releaseDate}
+            </if>
+        </set>
+
+        where id = #{id}
+    </update>
+
+    <insert id="addPublish" keyProperty="id" useGeneratedKeys="true">
+        insert into book_publish
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="author != null and author != ''">
+                author,
+            </if>
+            <if test="press != null and press != ''">
+                press,
+            </if>
+            <if test="releaseDate != null">
+                releaseDate
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="author != null and author != ''">
+                #{author},
+            </if>
+            <if test="press != null and press != ''">
+                #{press},
+            </if>
+            <if test="releaseDate != null">
+                #{releaseDate}
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="addProduct">
+        insert into book_msg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookName != null and bookName != ''">
+                bookName,
+            </if>
+            <if test="bookPrice != null">
+                bookPrice,
+            </if>
+            <if test="imgUrl != null and imgUrl != ''">
+                imgUrl,
+            </if>
+            <if test="bookDescription != null and bookDescription != ''">
+                bookDescription,
+            </if>
+            <if test="discount != null">
+                discount,
+            </if>
+            <if test="typeId != null">
+                typeId,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="isShelf != null">
+                isShelf,
+            </if>
+            <if test="publish_Id != null">
+                publish_Id,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookName != null and bookName != ''">
+                #{bookName},
+            </if>
+            <if test="bookPrice != null">
+                #{bookPrice},
+            </if>
+            <if test="imgUrl != null and imgUrl != ''">
+                #{imgUrl},
+            </if>
+            <if test="bookDescription != null and bookDescription != ''">
+                #{bookDescription},
+            </if>
+            <if test="discount != null">
+                #{discount},
+            </if>
+            <if test="typeId != null">
+                #{typeId},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="isShelf != null">
+                #{isShelf},
+            </if>
+            <if test="publish_Id != null">
+                #{publish_Id},
+            </if>
+        </trim>
+    </insert>
+</mapper>

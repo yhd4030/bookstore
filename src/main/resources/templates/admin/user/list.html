@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <link th:include="~{admin/link ::link}">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<script th:inline="javascript">
+    let currentMenu = "user_list";
+</script>
+<div class="wrapper">
+    <div th:include="~{admin/navbar ::navbar}"></div>
+
+    <div th:include="~{admin/menu ::menu}"></div>
+
+
+    <div class="content-wrapper ">
+        <section class="content-header">
+            <h1>用户列表</h1>
+        </section>
+
+        <section class="content">
+            <div class="box">
+                <!--高级查询--->
+                <div style="margin: 10px;">
+                    <form class="form-inline" id="searchForm" action="/admin/user/list" method="post">
+                        <input type="hidden" name="pageNum" id="currentPage" value="1">
+                        <div class="form-group">
+                            <label for="keyword">关键字:</label>
+                            <input type="text" class="form-control" name="keywords" th:value="${keywords}"
+                                   placeholder="请输入姓名/邮箱">
+                        </div>
+                        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span>
+                            查询
+                        </button>
+                        <a href="/employee/input" class="btn btn-success btn-input">
+                            <span class="glyphicon glyphicon-plus"></span> 添加
+                        </a>
+                    </form>
+                </div>
+                <div class="box-body table-responsive ">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="allCb"></th>
+                            <th>序号</th>
+                            <th>用户名</th>
+                            <th>昵称</th>
+                            <th>性别</th>
+                            <th>手机号码</th>
+                            <th>邮箱地址</th>
+                            <th>居住城市</th>
+                            <th>职业</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:id="${user.id}" th:each="user:${userList.list}">
+                            <td><input type="checkbox" class="cb"></td>
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.name}"></td>
+                            <td th:text="${user.sex==1?'男':'女'}"></td>
+                            <td th:text="${user.phone}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.location}"></td>
+                            <td th:text="${user.identity}"></td>
+                            <td>1</td>
+                            <td>
+                                <a href="#"
+                                   class="btn btn-info btn-xs btn_redirect" th:onclick="|editUser(${user.id})|">
+                                    <span class="glyphicon glyphicon-pencil"></span> 编辑
+                                </a>
+                                <a href="#"
+                                   class="btn btn-danger btn-xs btn-delete" th:onclick="|deleteUser(${user.id})|">
+                                    <span class="glyphicon glyphicon-trash"></span> 删除
+                                </a>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <!--分页-->
+                    <div style="text-align: center;">
+                        <ul id="pagination-demo" class="pagination-sm"></ul>
+                    </div>
+                    <script>
+                        //分页
+                        $(function () {
+                            $('#pagination-demo').twbsPagination({
+                                totalPages: [[${userList.pages}]],
+                                startPage: [[${userList.pageNum}]],
+                                visiblePages: [[${userList.pageSize}]],
+                                first: '首页',
+                                prev: '上一页',
+                                next: '下一页',
+                                last: '尾页',
+                                initiateStartPageClick: false,
+                                onPageClick: function (event, page) {
+                                    $("#currentPage").val(page);
+                                    $("#searchForm").submit();
+                                }
+                            });
+                        })
+                    </script>
+
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <div th:include="~{admin/footer ::footer}"></div>
+</div>
+<div th:include="~{admin/menu ::currentMenu}"></div>
+</body>
+<!--<nav aria-label="Page navigation" style="text-align: center">-->
+<!--    <ul class="pagination">-->
+<!--        <li th:if="${userList.hasPreviousPage}">-->
+<!--            <a th:href="'?pageNum=1'" aria-label="Previous">-->
+<!--                <span aria-hidden="true">&laquo;</span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        <li th:if="${userList.hasPreviousPage}"><a th:href="'?pageNum='+${userList.prePage}"><</a></li>-->
+<!--        <li th:each="nav : ${userList.navigatepageNums}">-->
+<!--            <a th:href="'?pageNum='+${nav}" th:text="${nav}"-->
+<!--               th:if="${nav != userList.pageNum}">-->
+<!--            </a>-->
+<!--            <span style="font-weight: bold" th:if="${nav == userList.pageNum}" th:text="${nav}"></span>-->
+<!--        </li>-->
+<!--        <li th:if="${userList.hasNextPage}">-->
+<!--            <a th:href="'?pageNum='+${userList.nextPage}">-->
+<!--                >-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        <li th:if="${userList.hasNextPage}">-->
+<!--            <a th:href="'?pageNum='+${userList.pages}" aria-label="Next">-->
+<!--                <span aria-hidden="true">&raquo;</span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</nav>-->
+<script type="text/javascript">
+
+    function editUser(userId) {
+        location.href = "/admin/user/edit/?id=" + userId;
+    }
+
+    //根据id删除用户
+    function deleteUser(userId) {
+        var $idStr = "#" + userId;
+        Swal.fire({
+            title: '确定删除?',
+            text: "该操作无法撤回!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确定',
+            cancelButtonText:'取消'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/user/deletion",
+                    data: {id: userId},
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.href="/admin/user/list";
+                        }else {
+                            Swal.fire(
+                                data.msg,
+                                '服务器好像出问题了',
+                                'error'
+                            )
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+</script>
+</html>

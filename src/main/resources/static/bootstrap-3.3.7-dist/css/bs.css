@@ -165,7 +165,7 @@ table { border-collapse:collapse; border-spacing:0; }
 	font-size: 15px;
     font-family: "微软雅黑";
     color: #424242;
-	background: url(../img/tubiao.gif) no-repeat left;
+	background: url(/images/tubiao.gif) no-repeat left;
 	padding-left:10px ;
 	margin-top:5px ;
 }
@@ -222,7 +222,7 @@ table { border-collapse:collapse; border-spacing:0; }
 	font-size: 12px;
 	font-family: "微软雅黑";
 	color: #424242;
-	background: url(../img/tubiao.gif) no-repeat left center;
+	background: url(/images/tubiao.gif) no-repeat left center;
 	padding-left:10px;
 }
 .f_d a:hover{
@@ -280,7 +280,7 @@ table { border-collapse:collapse; border-spacing:0; }
     display: block;
     width: 23px;
 	height: 17px;
-	background-image: url(../img/product_sprites.png);
+	background-image: url(/images/product_sprites.png);
 	background-repeat: no-repeat;
 	background-color: #646464;
 	margin-left: 6px;

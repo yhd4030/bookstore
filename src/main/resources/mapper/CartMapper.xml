@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookstore.haid.mapper.CartMapper">
+    <insert id="addInCart">
+        insert into book_shopcart
+        values (#{id}, #{bookId}, #{userName}, #{bookName}, #{imgUrl}, #{bookPrice}, #{buyNum}, #{subTotal})
+    </insert>
+    <update id="savaInCart">
+        update book_shopcart
+        set userName=#{userName},
+            bookName=#{bookName},
+            imgUrl=#{imgUrl},
+            bookPrice=#{bookPrice}
+        where bookId = #{bookId}
+    </update>
+    <select id="selectInCart" resultType="com.bookstore.haid.model.ShopCart">
+        select bookId
+        from book_shopcart
+        where bookId = #{bookId}
+    </select>
+    <select id="selectAll" resultType="com.bookstore.haid.model.ShopCart">
+        select id, bookId, userName, bookName, imgUrl, bookPrice, buyNum, subTotal
+        from book_shopcart
+        where userName = #{username}
+    </select>
+    <select id="selectByCheck" resultType="com.bookstore.haid.model.ShopCart">
+        select *
+        from book_shopcart
+        where id = #{bookId}
+          and userName = #{userName}
+    </select>
+    <insert id="createCart">
+        insert into book_cart
+        values (#{userName}, #{bookPrice})
+    </insert>
+
+    <update id="updateBuyNum">
+        update book_shopcart
+        set buyNum=#{buyNum},
+            subTotal=#{buyNum} * bookPrice
+        where bookId = #{bookId}
+          and userName = #{userName}
+    </update>
+
+    <update id="updateTotal">
+        update book_cart
+        set total=#{total}
+        where userName = #{userName}
+    </update>
+    <update id="updateCart">
+        update book_cart
+        set total=#{bookPrice} + total
+        where userName = #{userName}
+    </update>
+    <select id="selectTotalCart" resultType="com.bookstore.haid.model.Cart">
+        select userName, total
+        from book_cart
+        where userName = #{userName}
+    </select>
+    <delete id="deleteByUserName">
+        delete
+        from book_shopcart
+        where bookId = #{bookId}
+          and userName = #{userName}
+    </delete>
+
+    <delete id="deleteAll">
+        delete
+        from book_shopcart
+                where userName = #{username}
+                  and id in
+        <foreach collection="ids" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

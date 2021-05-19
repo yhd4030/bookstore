@@ -23,7 +23,7 @@ public class UserInformationController {
     @GetMapping("/information")
     public String imformation(Model model, HttpSession session) {
         String username = (String) session.getAttribute("username");
-        User user = userInfoService.findUserById(username);
+        User user = userInfoService.findUserByUsername(username);
         model.addAttribute("user", user);
         return "userInformation";
     }
@@ -33,7 +33,9 @@ public class UserInformationController {
     @ResponseBody
     public Boolean savaUser(User user, HttpSession session) {
         String username = (String) session.getAttribute("username");
-        user.setUsername(username);
+        if (user.getUsername()==null){
+            user.setUsername(username);
+        }
         Boolean aBoolean = userInfoService.updateUser(user);
         System.out.println(user);
         return aBoolean;

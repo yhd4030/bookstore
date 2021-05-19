@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bookstore.haid.mapper.LoginMapper">
+    <resultMap id="userMap" type="com.bookstore.haid.dto.UserDTO">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="sex" column="sex"/>
+        <result property="phone" column="phone"/>
+        <result property="location" column="location"/>
+        <result property="detail_address" column="detail_address"/>
+        <result property="email" column="email"/>
+        <result property="zip_code" column="zip_code"/>
+        <result property="identity" column="identity"/>
+        <association property="role" javaType="com.bookstore.haid.model.Role">
+            <id property="id" column="rid"/>
+            <result property="name" column="rname"/>
+            <result property="sn" column="sn"/>
+        </association>
+    </resultMap>
+    <select id="checkUser" resultMap="userMap">
+        select u.*, r.id rid, r.`name` rname, r.sn
+        from book_user u
+                     JOIN book_role r on u.role_id = r.id
+        where username = #{username}
+    </select>
+</mapper>

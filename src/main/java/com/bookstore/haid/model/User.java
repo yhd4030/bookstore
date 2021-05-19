@@ -10,13 +10,13 @@ public class User {
     private String username;
     private String password;
     private String name;
-    private String sex;
+    private int sex;
     private String email;
     private String phone;
     private String zip_code;
     private String location;
     private String detail_address;
     private String identity;
-    private String role;
+    private Integer roleId;
     private List<Address> address;
 }

@@ -1,5 +1,6 @@
 package com.bookstore.haid.service;
 
+import com.bookstore.haid.dto.UserDTO;
 import com.bookstore.haid.mapper.LoginMapper;
 import com.bookstore.haid.model.User;
 import com.bookstore.haid.utils.PasswordEncoderUtil;
@@ -27,13 +28,14 @@ public class LoginService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-//字符串s 为表单传过来的username
-        User user = loginMapper.checkUser(s);
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole()));
+        //字符串s 为表单传过来的username
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
-//        passwordEncoderUtil.passwordEncoder(user.getPassword())
+        UserDTO user = null;
+        List<SimpleGrantedAuthority> authorities = null;
+        user = loginMapper.checkUser(s);
+        authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getSn()));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(), authorities);
     }
-
 }

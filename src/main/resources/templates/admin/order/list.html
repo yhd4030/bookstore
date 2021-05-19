@@ -1,0 +1,317 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>后台主页</title>
+    <link th:include="~{admin/link ::link}">
+    <style>
+        #currentPage {
+            background-color: rgba(0, 123, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<script th:inline="javascript">
+    let currentMenu = "product_order";
+</script>
+<div class="wrapper">
+    <div th:include="~{admin/navbar ::navbar}"></div>
+
+    <div th:include="~{admin/menu ::menu}"></div>
+
+    <!--中间主要内容-->
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>权限管理</h1>
+        </section>
+        <section class="content">
+            <div class="box">
+                <div style="margin: 10px;">
+                    <form class="form-inline" id="searchForm" action="/admin/order/list" method="post">
+                        <input type="hidden" name="pageNum" id="currentPage1" value="1">
+                        <div class="form-group">
+                            <label for="keyword">关键字:</label>
+                            <input type="text" class="form-control" name="keywords"
+                                   th:value="${#httpServletRequest.getAttribute('keywords')}"
+                                   placeholder="订单号、收货人、商品名">
+                        </div>
+                        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span>
+                            查询
+                        </button>
+                        <a href="/admin/product/add" class="btn btn-success btn-input">
+                            <span class="glyphicon glyphicon-plus"></span> 添加
+                        </a>
+                    </form>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="allCb"></th>
+                            <th>订单编号</th>
+                            <th>买了什么</th>
+                            <th>订单状态</th>
+                            <th>金额</th>
+                            <th>收货人</th>
+                            <th>收货地址</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:id="'orderItem'+${orderInfoDTO.id}"
+                            th:each="orderInfoDTO:${pageInfo.list}">
+                            <td th:text="${orderInfoDTOStat.count}"></td>
+                            <td>
+                                <span th:text="${orderInfoDTO.order_num}"></span>
+                            </td>
+                            <td>
+                                <div th:each="orderItem:${orderInfoDTO.orderItem}">
+                                    <span th:text="${orderItem.count} +X"></span>
+                                    <a th:href="'/books?bookId='+${orderItem.bookMsg.bookId}" target="_blank"
+                                       title="${orderDetail.bookName}" style="width: 50px;height: 50px">
+                                        <img th:src="${orderItem.bookMsg.imgUrl}" style="width: 40px"/>
+                                        <span th:text="${orderItem.bookMsg.bookName}"></span>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                            <td>
+                                <!--                    三目运算符嵌套 先判断是否支付，再判断是否完成-->
+                                <span th:text="${orderInfoDTO.orderStatusDisplay}"></span>
+                            </td>
+                            <td>
+
+                                <span class="red" th:text="￥+${orderInfoDTO.order_total}"></span>
+                            </td>
+                            <td>
+                                <span class="red" th:text="${orderInfoDTO.address.receiver}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${orderInfoDTO.address.province}+${orderInfoDTO.address.city}+${orderInfoDTO.address.area}+${orderInfoDTO.address.detail_address}"></span>
+                            </td>
+                            <td>
+                                <!--                    订单状态为0 未支付-->
+                                <div th:if="${orderInfoDTO.order_status.equals('0')}">
+                                    <button type="button" class="btn btn-info btn-xs"
+                                            th:onclick="|toPay(${orderInfoDTO.id})|">
+                                        去支付
+                                    </button>
+                                    <button type="button" class="btn btn-xs btn-danger"
+                                            th:onclick="|cancelOrder(${orderInfoDTO.id})|">
+                                        取消订单
+                                    </button>
+                                </div>
+                                <!--                    订单状态为1 已支付-->
+                                <div th:if="${ orderInfoDTO.order_status.equals('1')}">
+                                    <button th:id="'complete'+${orderInfoDTO.id}"
+                                            th:if="${not orderInfoDTO.order_status.equals('4')}" type="button"
+                                            class="btn btn-xs btn-info"
+                                            th:onclick="|confirmReceiving(${orderInfoDTO.id})|">
+                                        确认收货
+                                    </button>
+                                    <button type="button" class="btn btn-xs btn-info" onclick="lookShipping()">
+                                        查看物流
+                                    </button>
+                                    <button type="button" class="btn btn-xs btn-danger"
+                                            th:onclick="|deleteOrder(${orderInfoDTO.id})|">
+                                        删除订单
+                                    </button>
+                                </div>
+
+                                <div th:if="${ orderInfoDTO.order_status.equals('3')}">
+                                    <button type="button" class="btn btn-xs btn-default" >
+                                        已取消
+                                    </button>
+                                    <button type="button" class="btn btn-xs btn-danger"
+                                            th:onclick="|deleteOrder(${orderInfoDTO.id})|">
+                                        删除订单
+                                    </button>
+                                </div>
+
+                                <div th:if="${ orderInfoDTO.order_status.equals('4')}">
+                                    <button type="button" class="btn btn-xs btn-success" >
+                                        去评价
+                                    </button>
+                                    <button type="button" class="btn btn-xs btn-danger"
+                                            th:onclick="|deleteOrder(${orderInfoDTO.id})|">
+                                        删除订单记录
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+
+                    <div style="text-align: center;">
+                        <ul id="pagination-demo" class="pagination-sm"></ul>
+                    </div>
+                    <script>
+                        //分页
+                        $(function () {
+                            $('#pagination-demo').twbsPagination({
+                                totalPages: [[${pageInfo.pages}]],
+                                startPage: [[${pageInfo.pageNum}]],
+                                visiblePages: [[${pageInfo.pageSize}]],
+                                first: '首页',
+                                prev: '上一页',
+                                next: '下一页',
+                                last: '尾页',
+                                initiateStartPageClick: false,
+                                onPageClick: function (event, page) {
+                                    $("#currentPage1").val(page);
+                                    $("#searchForm").submit();
+                                }
+                            });
+                        })
+                    </script>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!--底部-->
+    <div th:include="~{admin/footer ::footer}"></div>
+</div>
+<div th:include="~{admin/menu ::currentMenu}"></div>
+</body>
+<script type="text/javascript">
+
+    function toPay(id) {
+        window.location.href = "/order/orderPay?id=" + id;
+    }
+
+    function confirmReceiving(id) {
+        var $completeItem = $("#complete" + id);
+        $.confirm({
+            title: '确认',
+            content: '您确认收到商品了？',
+            type: 'green',
+            buttons: {
+                ok: {
+                    text: "确定",
+                    btnClass: 'btn-success',
+                    keys: ['enter'],
+                    action: function () {
+                        $.ajax({
+                            method: "post",
+                            url: "/order/completeOrder",
+                            data: {id: id},
+                            dataType: "json",
+                            success: function (data) {
+                                if (data == true) {
+                                    domLastic.init({
+                                        itemsClassnameToConnect: 'cart_item', //类选择器
+                                        itemsJointStrength: 10, //value optimum between 10 - 100
+                                        animationSpeed: 500, //value optimum 300 - 1000 动画速度
+                                        animationIntensity: 0.6, //value optimum optimum 0.5 - 1
+                                        animationDirection: 'horizontal', //动画方向
+                                        callback: function () {
+                                            console.log('anim finished');
+                                        }
+                                    });
+                                    domLastic.animateItems();
+                                    $($completeItem).slideToggle(150, function () {
+                                        $($completeItem).remove();
+                                        //aniamte ListItems
+                                        domLastic.animateItems();
+                                    });
+                                }
+
+                            }
+                        });
+                    }
+                },
+                cancel: {
+                    text: "取消"
+                }
+            }
+        });
+    }
+
+    function cancelOrder(id) {
+        var $deleteItem = $("#orderItem" + id);
+        $.confirm({
+            title: '取消',
+            content: '您确定取消这个订单？',
+            type: 'red',
+            buttons: {
+                ok: {
+                    text: "确定",
+                    btnClass: 'btn-danger',
+                    keys: ['enter'],
+                    action: function () {
+                        $.ajax({
+                            method: "post",
+                            url: "/order/cancelOrder",
+                            data: {id: id},
+                            dataType: "json",
+                            success: function (data) {
+                                if (data == true) {
+                                    window.location.reload();
+                                }
+                            }
+                        })
+
+
+                    }
+                },
+                cancel: {
+                    text: "取消"
+                }
+            }
+        });
+    }
+    function deleteOrder(id) {
+        var $deleteItem = $("#orderItem" + id);
+        $.confirm({
+            title: '删除',
+            content: '您确定删除这个订单？',
+            type: 'red',
+            buttons: {
+                ok: {
+                    text: "确定",
+                    btnClass: 'btn-danger',
+                    keys: ['enter'],
+                    action: function () {
+                        $.ajax({
+                            method: "post",
+                            url: "/order/deleteOrder",
+                            data: {id: id},
+                            dataType: "json",
+                            success: function (data) {
+                                if (data == true) {
+                                    domLastic.init({
+                                        itemsClassnameToConnect: 'cart_item', //类选择器
+                                        itemsJointStrength: 10, //value optimum between 10 - 100
+                                        animationSpeed: 500, //value optimum 300 - 1000 动画速度
+                                        animationIntensity: 0.6, //value optimum optimum 0.5 - 1
+                                        animationDirection: 'horizontal', //动画方向
+                                        callback: function () {
+                                            console.log('anim finished');
+                                        }
+                                    });
+                                    domLastic.animateItems();
+                                    $($deleteItem).slideToggle(150, function () {
+                                        $($deleteItem).remove();
+                                        //aniamte ListItems
+                                        domLastic.animateItems();
+                                    });
+                                }
+                            }
+                        })
+
+
+                    }
+                },
+                cancel: {
+                    text: "取消"
+                }
+            }
+        });
+    }
+
+</script>
+</html>

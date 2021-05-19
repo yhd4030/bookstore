@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-
+//地址管理
 @Controller
 @RequestMapping("/address")
 public class AddressController {
@@ -33,10 +33,11 @@ public class AddressController {
         Address address = addressService.findById(addressId);
         return address;
     }
+
     //根据id删除收获地址
     @PostMapping("/del")
     @ResponseBody
-    public Boolean delAddress(Integer addressId){
+    public Boolean delAddress(Integer addressId) {
         Boolean aBoolean = addressService.delById(addressId);
         return aBoolean;
     }

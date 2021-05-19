@@ -44,6 +44,7 @@ public class AlipayCallBackController {
         logger.info("支付宝回调，{}", paramsJson);
         try {
             AlipayConfig alipayConfig = new AlipayConfig();
+            //支付宝验签
             boolean signVerified = AlipaySignature.rsaCheckV1(params, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, AlipayConfig.SIGNTYPE);
             if (signVerified) {
                 logger.info("支付宝回调签名认证成功");
@@ -67,6 +68,7 @@ public class AlipayCallBackController {
                         } else {
                             logger.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}", trade_status, paramsJson);
                         }
+                        //订单完成
                         if (trade_status.equals("TRADE_FINISHED")) {
                             try {
                                 //修改订单状态
@@ -79,7 +81,6 @@ public class AlipayCallBackController {
                         } else {
                             logger.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}", trade_status, paramsJson);
                         }
-
                     }
                 });
                 // 如果签名验证正确，立即返回success，后续业务另起线程单独处理
@@ -94,7 +95,6 @@ public class AlipayCallBackController {
             return "failure";
         }
     }
-
     /**
      * 支付宝同步回调
      */
@@ -106,12 +106,16 @@ public class AlipayCallBackController {
         String paramsJson = JSON.toJSONString(params);
         try {
             AlipayConfig alipayConfig = new AlipayConfig();
+            //支付宝验签
             boolean signVerified = AlipaySignature.rsaCheckV1(params, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, AlipayConfig.SIGNTYPE);
             if (signVerified) {
                 //按照支付结果异步通知中描述，对支付结果中的业务内容进行1\2\3\4二次校验，校验成功后在response中返回success，校验失败返回failure
                 this.check(params);
+                //获取支付金额
                 Double totalAmount = Double.valueOf(params.get("total_amount"));
+                //获取支付单号
                 String outTradeNo = params.get("out_trade_no");
+                //校验
                 if (outTradeNo != null && totalAmount != null) {
                     orderInfoDTO.setOrder_total(totalAmount);
                     orderInfoDTO.setOrder_num(outTradeNo);
@@ -139,7 +143,6 @@ public class AlipayCallBackController {
             String name = entry.getKey();
             String[] values = entry.getValue();
             int valLen = values.length;
-
             if (valLen == 1) {
                 retMap.put(name, values[0]);
             } else if (valLen > 1) {
@@ -156,7 +159,9 @@ public class AlipayCallBackController {
     }
 
     private AlipayNotifyParam buildAliPayNotifyParam(Map<String, String> params) {
+        //将json数据转为字符串
         String json = JSON.toJSONString(params);
+        //将字符串转为object对象
         return JSON.parseObject(json, AlipayNotifyParam.class);
     }
 

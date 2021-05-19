@@ -1,16 +1,21 @@
 package com.bookstore.haid;
 
+import com.bookstore.haid.dto.OrderInfoDTO;
+import com.bookstore.haid.service.OrderService;
 import com.bookstore.haid.utils.PasswordEncoderUtil;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 @SpringBootTest
 class HaidApplicationTests {
-
+    @Autowired
+    private OrderService orderService;
     @Test
     void contextLoads() {
-        String s = PasswordEncoderUtil.passwordEncoder("$2a$10$QZvtajDD3blJXGvf4kA3kealdD13N4eX/5N4bR9sE4WJYk/c2MI5W");
-        System.out.println(s);
+
     }
 
 

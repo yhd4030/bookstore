@@ -29,4 +29,5 @@ public class AlipayNotifyParam implements Serializable {
     private Date gmtClose; // 该笔交易结束时间。格式为yyyy-MM-dd HH:mm:ss
     private String fundBillList; // 支付成功的各个渠道金额信息,array
     private String passbackParams; // 公共回传参数，如果请求时传递了该参数，则返回给商户时会在异步通知时将该参数原样返回。
+
 }

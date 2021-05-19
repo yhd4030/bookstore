@@ -12,12 +12,15 @@
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/checkBook_2.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/shopCartTest.css}">
     <link rel="stylesheet" th:href="@{/css/jquery-confirm.css}">
-
+    <link rel="stylesheet" th:href="@{/css/mc-dialoger.css}"/>
+    <link rel="stylesheet" th:href="@{/css/search_style.css}">
+    <link rel="stylesheet" th:href="@{/js/font-awesome/css/font-awesome.min.css}">
 
     <script th:src="@{/js/jquery-3.4.1.min.js}" type="application/javascript"></script>
     <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/domlastic.js}" type="text/javascript"></script>
     <script th:src="@{/js/jquery-confirm.js}" type="text/javascript"></script>
+    <script type="application/javascript" th:src="@{/js/dialoger.js}"></script>
     <!--    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>-->
     <!--    <script  type="text/javascript" th:inline="javascript">-->
     <!--        var Path=[[${#httpServletRequest.getContextPath()}]];-->
@@ -78,7 +81,7 @@
             <tbody>
             <tr class="shop_intro">
                 <td class="tcol1">
-                    <input type="checkbox" class="select_all_oneShop" th:onclick="selectAllShop()"/>
+                    <input type="checkbox" class="select_all_oneShop" id="allCheck" th:onclick="selectAllShop()"/>
                     <span>全选</span>
                 </td>
                 <td>
@@ -89,9 +92,10 @@
                 <td></td>
                 <td></td>
             </tr>
-            <tr th:each="shopCart:${shopCarts.list}" class="cart_item" th:id="'cart_item'+${shopCart.bookId}">
+            <tr th:each="shopCart:${shopCarts.list}" class="cart_item" name="listItem"
+                th:id="'cart_item'+${shopCart.bookId}">
                 <td class="tcol1">
-                    <input name="cks" type="checkbox" th:id="${shopCart.bookId}"
+                    <input name="cks" type="checkbox" th:id="${shopCart.id}"
                            th:onclick="|checkTotal(${shopCart.bookId})|"
                            class="shop_checkbox"/>
                 </td>
@@ -108,9 +112,9 @@
                         <input type="text" disabled class="buy_num" th:id="${'buyNum'+shopCart.bookId}"
                                th:value="${shopCart.buyNum}"/>
                         <a href="javascript:void(0);" class="num_add"
-                           th:onclick="|add(${shopCart.bookId},${shopCart.bookPrice})|">+</a>
+                           th:onclick="|add(${shopCart.bookId},${shopCart.bookPrice})|"></a>
                         <a href="javascript:void(0);" class="num_sub"
-                           th:onclick="|sub(${shopCart.bookId},${shopCart.bookPrice})|">-</a>
+                           th:onclick="|sub(${shopCart.bookId},${shopCart.bookPrice})|"></a>
                     </div>
                 </td>
                 <td>
@@ -181,7 +185,7 @@
     -->
     <div class="row account_div">
         <div id="batch">
-            <a href="cart/clear">清空购物车</a>
+            <a href="javascript:deleteAllBooks();">清空购物车</a>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a th:href="@{/}" style="font-size: 20px;color: #000000">继续购物</a>
         </div>
         <div id="shopping_total">
@@ -216,7 +220,7 @@
                             data: {bookId: bookId},
                             dataType: "json",
                             success: function () {
-                                alert("success")
+
                             }
                         })
                         domLastic.init({
@@ -235,18 +239,90 @@
                             //aniamte ListItems
                             domLastic.animateItems();
                         });
-
                     }
                 },
                 cancel: {
                     text: "取消"
                 }
-
-
             }
         });
+    }
 
+    function deleteAllBooks() {
+        var bookIdStr = "";
+        var count = 0;
+        var cks = document.getElementsByName("cks");
+        var listItem = document.getElementsByName("listItem");
+        var $checked = $("tr[name=listItem] input:checked");
+        for (var i = 0; i < cks.length; i++) {
+            if (cks[i].checked) {
+                bookIdStr = $(cks[i]).attr("id") + "," + bookIdStr;
+                count++;
+            }
+        }
+        if (count == 0) {
+            $.confirm({
+                title: '提示',
+                content: '没有可删的商品',
+                type: 'red',
+                buttons: {
+                    cancel: {
+                        text: "取消"
+                    }
+                }
+            });
+        } else {
 
+            $.confirm({
+                title: '删除',
+                content: '您确定删除这样商品？',
+                type: 'green',
+                buttons: {
+                    ok: {
+                        text: "确定",
+                        btnClass: 'btn-danger',
+                        keys: ['enter'],
+                        action: function () {
+                            $.ajax({
+                                method: "post",
+                                url: "/books/shopCart/deleteAll",
+                                data: {bookIdStr: bookIdStr},
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data.success) {
+                                        $($checked).each(function (index, element) {
+                                            var parent = $(element).parents("tr[name=listItem]");
+                                            domLastic.init({
+                                                itemsClassnameToConnect: 'cart_item', //类选择器
+                                                itemsJointStrength: 10, //value optimum between 10 - 100
+                                                animationSpeed: 500, //value optimum 300 - 1000 动画速度
+                                                animationIntensity: 0.6, //value optimum optimum 0.5 - 1
+                                                animationDirection: 'horizontal', //动画方向
+                                                callback: function () {
+                                                    console.log('anim finished');
+                                                }
+                                            });
+                                            domLastic.animateItems();
+                                            parent.slideToggle(1000, function () {
+                                                parent.remove();
+                                                //aniamte ListItems
+                                                domLastic.animateItems();
+                                            });
+                                        })
+                                    } else {
+                                        dialoger.$toast({mes: "删除失败", type: 'error'});
+                                    }
+
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        text: "取消"
+                    }
+                }
+            });
+        }
     }
 
     function sleep(d) {
@@ -313,17 +389,24 @@
         var $checkbox = $($cartItem).find(".shop_checkbox");
         var subTotal = parseFloat($("#subTotal" + bookId).html());
         var allTotal = parseFloat($("#all_total").html());
-        // alert($checkbox.prop("checked"));
         if ($checkbox.prop("checked")) {
             $("#all_total").text(subTotal + allTotal);
         } else {
             $("#all_total").text(allTotal - subTotal);
         }
+        var isAll = true;
+        var $check = $("input[name=cks]");
+        $check.each(function (index, element) {
+            var checked = $(element).prop("checked");
+            isAll = isAll && checked;
+            console.log(element);
+        })
+        $("#allCheck").prop("checked", isAll);
     }
 
     function submitOrder() {
         var bookIdStr = "";
-        var count=0;
+        var count = 0;
         var cks = document.getElementsByName("cks");
         for (var i = 0; i < cks.length; i++) {
             if (cks[i].checked) {
@@ -331,7 +414,7 @@
                 count++;
             }
         }
-        if (count==0){
+        if (count == 0) {
             $.confirm({
                 title: '提示',
                 content: '请选择商品',
@@ -342,7 +425,7 @@
                     }
                 }
             });
-        }else {
+        } else {
             $.ajax({
                 method: "post",
                 url: "/order/details",

@@ -20,4 +20,14 @@ public class OrderInfoDTO {
     private Address address;
     private List<OrderItem> orderItem;
 
+    public String getOrderStatusDisplay(){
+        switch (order_status){
+            case "0": return "未支付";
+            case "1": return "已支付";
+            case "3": return "已取消";
+            case "4": return "已完成";
+            default:return "未知";
+        }
+    }
+
 }

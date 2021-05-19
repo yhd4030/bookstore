@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 public class BookPublish {
-    private Integer bookId;
+    private Integer id;
     private String author;
     private String press;
     private Date releaseDate;

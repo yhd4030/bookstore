@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bookstore.haid.mapper.ReportMapper">
+    <select id="selectForReport" resultType="java.util.Map">
+        SELECT bc.type             groupType,
+               COUNT(boi.id)       sales,
+               SUM(bo.order_total) totalPrice
+        FROM book_order bo
+                     LEFT JOIN book_orderitem boi ON bo.order_num = boi.order_id
+                     LEFT JOIN book_msg bm ON boi.book_id = bm.bookId
+                     LEFT JOIN book_category bc ON bm.typeId = bc.id
+        where bo.order_status = 4
+        GROUP BY bc.type
+    </select>
+</mapper>

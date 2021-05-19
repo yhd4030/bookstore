@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookstore.haid.mapper.ProductInfoMapper">
+    <resultMap id="BookMsgResultMap" type="com.bookstore.haid.dto.BookMsgDTO">
+        <id property="bookId" column="bookId"/>
+        <result property="bookName" column="bookName"/>
+        <result property="imgUrl" column="imgUrl"/>
+        <result property="typeId" column="typeId"/>
+        <result property="typeId" column="typeId"/>
+        <result property="bookPrice" column="bookPrice"/>
+        <result property="bookDescription" column="bookDescription"/>
+        <result property="discount" column="discount"/>
+        <result property="detail_id" column="detail_id"/>
+        <result property="amount" column="amount"/>
+        <result property="isShelf" column="isShelf"/>
+        <result property="publish_Id" column="publish_Id"/>
+        <association property="bookPublish" javaType="com.bookstore.haid.model.BookPublish">
+            <id property="id" column="id"/>
+            <result property="author" column="author"/>
+            <result property="press" column="press"/>
+            <result property="releaseDate" column="releaseDate"/>
+        </association>
+        <association property="category" javaType="com.bookstore.haid.model.Category">
+            <id property="id" column="c_id"/>
+            <result property="type" column="type"/>
+        </association>
+    </resultMap>
+
+
+    <!--        <select id="findNewProductById" resultMap="productMap">-->
+    <!--            select sn.*,spd.* from shop_newproduct sn, shop_productdetails spd WHERE sn.detail_id=spd.did AND sn.id=#{id};-->
+    <!--        </select>-->
+
+    <!--        <select id="findRecommendedById" resultMap="productMap">-->
+    <!--            select sr.*,spd.* from shop_recommended sr, shop_productdetails spd WHERE sr.detail_id=spd.did and sr.id=#{id};-->
+    <!--        </select>-->
+
+    <!--        <select id="countProduct" resultType="int">-->
+    <!--            select count(*) from shop_product;-->
+    <!--        </select>-->
+
+    <!--        <select id="findProductByRandom" resultType="com.cmx.mall.model.ShopProduct">-->
+    <!--            select * from shop_product-->
+    <!--            <where>-->
+    <!--                id in-->
+    <!--                <foreach item="item" collection="list" separator="," open="(" close=")" index="">-->
+    <!--                    #{item}-->
+    <!--                </foreach>-->
+    <!--            </where>-->
+    <!--        </select>-->
+
+    <select id="findProductById" resultMap="BookMsgResultMap">
+        SELECT bm.*, bp.*, bc.id c_id, bc.type
+        FROM book_msg bm
+                     JOIN book_publish bp ON bm.publish_Id = bp.`id`
+                     JOIN book_category bc ON bm.typeId = bc.id
+        WHERE bm.`bookId` = #{id}
+    </select>
+
+    <!--查询种类-->
+    <select id="findCategory" resultType="com.bookstore.haid.model.Category">
+        select *
+        from book_category
+    </select>
+</mapper>

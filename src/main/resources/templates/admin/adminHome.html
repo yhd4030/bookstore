@@ -1,0 +1,145 @@
+<!--
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+    <frameset cols="13%,*,12%" border frameborder="no">
+        <frame name="leftFrame" src="/admin/left"/>
+        <frame name="centerFrame" src="/admin/center"/>
+        <frame name="centerFrame" src="/admin/right"/>
+        &lt;!&ndash;    <frame name="rightFrame" src="admin/right" scrolling="no"/>&ndash;&gt;
+    </frameset>
+</html>-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>111</title>
+    <link th:include="~{admin/link ::link}">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<script th:inline="javascript">
+    let currentMenu = "index2";
+</script>
+
+<div class="wrapper">
+    <div th:include="~{admin/navbar ::navbar}"></div>
+
+    <div th:include="~{admin/menu ::menu}"></div>
+
+
+    <div class="content-wrapper ">
+        <section class="content-header">
+            <!--            <h1 th:text="${ProductInfo.bookId!=null?'商品编辑':'商品添加'}"></h1>-->
+        </section>
+
+        <section class="content">
+            <div class="box">
+                <h2 class="h2" align="center">[[${#httpServletRequest.remoteUser}]],欢迎您来到DD商城后台管理系统</h2>
+            </div>
+        </section>
+    </div>
+
+    <div th:include="~{admin/footer ::footer}"></div>
+</div>
+<div th:include="~{admin/menu ::currentMenu}"></div>
+</body>
+<script type="text/javascript">
+
+    $(function () {
+
+        $("#roleIds").focus();
+        jQuery.validator.addMethod("isMobile", function (value, element) {
+            var length = value.length;
+            var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
+            return this.optional(element) || (length == 11 && mobile.test(value));
+        }, "请正确填写手机号码");
+
+        $("#storeForm").validate({
+            //一失去焦点就校验
+            onfocusout: function (element) {
+                $(element).valid();
+            },
+            errorPlacement: function (error, element) {	//错误信息位置设置方法
+                error.appendTo(element.parent().next());//这里的error是生成的错误对象，element是录入数据的对象,parent父元素，next()下一个
+            },
+            errorClass: "red",
+            rules: {
+                username: {
+                    required: true
+                },
+                nickname: {
+                    required: true
+                },
+                gender: {
+                    required: true
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                phone: {
+                    required: true,
+                    isMobile: true
+                },
+                location: {
+                    required: true
+                },
+                identity: {
+                    required: true
+                },
+                detailAddress: {
+                    required: true
+                }
+            },
+            messages: {
+                username: {
+                    required: "请填写用户名"
+                },
+                nickname: {
+                    required: "请填写昵称"
+                },
+                gender: {
+                    required: "请选择您的性别"
+                },
+                email: {
+                    required: "请填写邮箱地址",
+                    email: "请正确填写邮箱"
+                },
+                phone: {
+                    required: "请填写您的手机号码"
+                },
+                location: {
+                    required: "请选择您所在的城市"
+                },
+                identity: {
+                    required: "请选择您的身份"
+                },
+                detailAddress: {
+                    required: "请填写您的详细地址"
+                }
+            },
+            submitHandler: function (form) {
+                $.ajax({
+                    type: 'post',
+                    url: '/user/update',
+                    data: $("#storeForm").serialize(),
+                    success: function (data) {
+                        if (data == true) {
+                            window.location.reload(true)
+                        } else {
+                            alert("保存失败")
+                        }
+                    },
+                    dataType: "json"
+                });
+            }
+        });
+    });
+
+</script>
+</html>

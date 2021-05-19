@@ -7,10 +7,12 @@ import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.bookstore.haid.dto.OrderInfoDTO;
 import com.bookstore.haid.model.*;
+import com.bookstore.haid.qo.QueryObject;
 import com.bookstore.haid.service.AddressService;
 import com.bookstore.haid.service.OrderService;
 import com.bookstore.haid.service.UserInfoService;
 import com.bookstore.haid.utils.AlipayConfig;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -38,19 +41,18 @@ public class OrderController {
     //订单信息页面
     @RequestMapping("/info")
     public String orderInfo(HttpServletRequest request, Model model) {
-        Double countMoney = 0d;
+        BigDecimal countMoney = new BigDecimal("0");
         String username = (String) request.getSession().getAttribute("username");
         List<Address> address = addressService.findAddress(username);
         List<ShopCart> checkBooks = (List<ShopCart>) request.getSession().getAttribute("checkBooks");
         for (ShopCart shopCart : checkBooks) {
-            countMoney = countMoney + shopCart.getSubTotal();
+            countMoney = countMoney.add(shopCart.getSubTotal());
         }
-        User user = userInfoService.findUserById(username);
+        User user = userInfoService.findUserByUsername(username);
         model.addAttribute("user", user);
         model.addAttribute("checkBooks", checkBooks);
         model.addAttribute("countMoney", countMoney);
         model.addAttribute("addressList", address);
-
         return "orderInfo";
     }
 
@@ -62,7 +64,6 @@ public class OrderController {
         String[] strings = bookIdStr.split(",");
         List<ShopCart> shopCartList = orderService.selectByCheck(strings, username);
         request.getSession().setAttribute("checkBooks", shopCartList);
-
         return true;
     }
 
@@ -70,7 +71,6 @@ public class OrderController {
     @PostMapping("/commit")
     @ResponseBody
     public Integer commitOrder(Integer addressId, Double OrderTotal, HttpSession session, Model model) {
-        System.out.println(addressId);
         List<ShopCart> checkBooks = (List<ShopCart>) session.getAttribute("checkBooks");
         String username = (String) session.getAttribute("username");
         Order buy = orderService.buy(addressId, session, OrderTotal, checkBooks);
@@ -88,11 +88,10 @@ public class OrderController {
 
     //订单提交后 查看所有的订单
     @RequestMapping("/list")
-    public String OrderList(HttpSession session, Model model) {
+    public String OrderList(QueryObject qo, HttpSession session, Model model) {
         String username = (String) session.getAttribute("username");
-        List<OrderInfoDTO> orderInfoDTOS = orderService.selectOrderInfo(username);
-        model.addAttribute("orderInfoDTOS", orderInfoDTOS);
-        System.out.println(new Date());
+        PageInfo<OrderInfoDTO> pageInfo = orderService.selectOrderInfo(qo, username);
+        model.addAttribute("pageInfo", pageInfo);
         return "orderList";
     }
 
@@ -130,6 +129,12 @@ public class OrderController {
     @ResponseBody
     public Boolean deleteOrder(Integer id) {
         return orderService.deleteOrderById(id);
+    }
+
+    @RequestMapping("/cancelOrder")
+    @ResponseBody
+    public Boolean cancelOrder(Integer id) {
+        return orderService.cancelOrderById(id);
     }
 
     //支付

@@ -1,87 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bookstore.haid.mapper.OrderMapper">
-<resultMap id="orderInfoMap" type="com.bookstore.haid.dto.OrderInfoDTO">
-       <id property="id" column="id"></id>
-       <result property="order_num" column="order_num"></result>
-       <result property="create_date" column="create_date"></result>
-       <result property="user_id" column="user_id"></result>
-       <result property="order_total" column="order_total"></result>
-       <result property="address_id" column="address_id"></result>
-       <result property="order_status" column="order_status"></result>
-       <association property="address" javaType="com.bookstore.haid.model.Address">
-            <id property="id" column="addressId"></id>
-            <result property="province" column="province"></result>
-            <result property="city" column="city"></result>
-            <result property="area" column="area"></result>
-            <result property="detail_address" column="detail_address"></result>
-            <result property="receiver" column="receiver"></result>
-            <result property="tel" column="tel"></result>
-       </association>
-       <collection property="orderItem" ofType="com.bookstore.haid.model.OrderItem">
-            <id property="id" column="order_item_id"></id>
-            <result property="book_id" column="book_id"></result>
-            <result property="count" column="count"></result>
+    <resultMap id="orderInfoMap" type="com.bookstore.haid.dto.OrderInfoDTO">
+        <id property="id" column="id"/>
+        <result property="order_num" column="order_num"/>
+        <result property="create_date" column="create_date"/>
+        <result property="user_id" column="user_id"/>
+        <result property="order_total" column="order_total"/>
+        <result property="address_id" column="address_id"/>
+        <result property="order_status" column="order_status"/>
+        <association property="address" javaType="com.bookstore.haid.model.Address">
+            <id property="id" column="addressId"/>
+            <result property="province" column="province"/>
+            <result property="city" column="city"/>
+            <result property="area" column="area"/>
+            <result property="detail_address" column="detail_address"/>
+            <result property="receiver" column="receiver"/>
+            <result property="tel" column="tel"/>
+        </association>
+        <collection property="orderItem" ofType="com.bookstore.haid.model.OrderItem">
+            <id property="id" column="order_item_id"/>
+            <result property="book_id" column="book_id"/>
+            <result property="count" column="count"/>
             <association property="bookMsg" javaType="com.bookstore.haid.model.BookMsg">
-                <id property="bookId" column="bookId"></id>
-                <result property="imgUrl" column="imgUrl"></result>
-                <result property="bookName" column="bookName"></result>
+                <id property="bookId" column="bookId"/>
+
+                <result property="imgUrl" column="imgUrl"/>
+                <result property="bookName" column="bookName"/>
             </association>
-       </collection>
-
-
-</resultMap>
+        </collection>
+    </resultMap>
     <!--创建新订单-->
     <insert id="insert">
-
-    insert into book_order values( #{id} ,#{order_num},#{create_date} ,#{user_id} ,#{order_total} ,#{address_id} ,#{order_status})
-
+        insert into book_order
+        values (#{id}, #{order_num}, #{create_date}, #{user_id}, #{order_total}, #{address_id}, #{order_status})
     </insert>
     <!--查询订单信息-->
     <select id="selectOrderInfo" resultMap="orderInfoMap">
-
-    SELECT bo.*,
-    ba.id addressId,ba.province,ba.city,ba.area,ba.detail_address,ba.receiver,ba.tel,
-    boi.`id` order_item_id,boi.`book_id`,
-    bm.bookId,bm.`imgUrl`,bm.`bookName`,
-    boi.`count`
-    FROM book_order bo,book_orderitem boi,book_address ba,book_msg bm
-    WHERE
-     bo.`order_num`=boi.`order_id` AND
-     bo.`address_id`=ba.`id` AND
-     boi.`book_id`=bm.`bookId` AND
-     bo.`user_id`=#{username};
-
+        SELECT bo.*,
+               ba.id    addressId,
+               ba.province,
+               ba.city,
+               ba.area,
+               ba.detail_address,
+               ba.receiver,
+               ba.tel,
+               boi.`id` order_item_id,
+               boi.`book_id`,
+               bm.bookId,
+               bm.`imgUrl`,
+               bm.`bookName`,
+               boi.`count`
+        FROM book_order bo,
+             book_orderitem boi,
+             book_address ba,
+             book_msg bm
+        WHERE bo.`order_num` = boi.`order_id`
+          AND bo.`address_id` = ba.`id`
+          AND boi.`book_id` = bm.`bookId`
+          AND bo.order_status !='2'
+          AND bo.`user_id` = #{username}
     </select>
 
     <select id="findOrderById" resultMap="orderInfoMap">
         SELECT bo.*,
-    ba.id addressId,ba.province,ba.city,ba.area,ba.detail_address,ba.receiver,ba.tel,
-    boi.`id` order_item_id,boi.`book_id`,
-    bm.bookId,bm.`imgUrl`,bm.`bookName`,bm.bookDescription,
-    boi.`count`
-    FROM book_order bo,book_orderitem boi,book_address ba,book_msg bm
-    WHERE
-     bo.`order_num`=boi.`order_id` AND
-     bo.`address_id`=ba.`id` AND
-     boi.`book_id`=bm.`bookId` AND
-     bo.`user_id`=#{username} AND
-     bo.id=#{id};
+               ba.id    addressId,
+               ba.province,
+               ba.city,
+               ba.area,
+               ba.detail_address,
+               ba.receiver,
+               ba.tel,
+               boi.`id` order_item_id,
+               boi.`book_id`,
+               bm.bookId,
+               bm.`imgUrl`,
+               bm.`bookName`,
+               bm.bookDescription,
+               boi.`count`
+        FROM book_order bo,
+             book_orderitem boi,
+             book_address ba,
+             book_msg bm
+        WHERE bo.`order_num` = boi.`order_id`
+          AND bo.`address_id` = ba.`id`
+          AND boi.`book_id` = bm.`bookId`
+          AND bo.`user_id` = #{username}
+          AND bo.id = #{id};
     </select>
     <select id="selectBookMsgByBookId" resultType="com.bookstore.haid.model.BookMsg">
-        select * from book_msg where bookId=#{bookId};
+        select *
+        from book_msg
+        where bookId = #{bookId};
     </select>
-    <update id="OrderStatusUpdate" >
-        update book_order set order_status=#{status} where id=#{id};
+    <update id="OrderStatusUpdate">
+        update book_order
+        set order_status=#{status}
+        where id = #{id};
     </update>
     <delete id="deleteOrderById">
-        delete from book_order where id=#{id};
+        update book_order
+        set order_status=#{status}
+        where id = #{id}
     </delete>
 
     <select id="findIdByOrderNum" resultType="com.bookstore.haid.model.Order">
-        select id,order_num,create_date,user_id,order_total,address_id,order_status from book_order where order_num=#{order_num};
+        select id, order_num, create_date, user_id, order_total, address_id, order_status
+        from book_order
+        where order_num = #{order_num};
     </select>
     <update id="updateOrderStatus">
-        update book_order set order_status=#{status} where order_num=#{order_num};
+        update book_order
+        set order_status=#{status}
+        where order_num = #{order_num};
+    </update>
+    <select id="selectForList" resultMap="orderInfoMap">
+        SELECT bo.*,
+               ba.id    addressId,
+               ba.province,
+               ba.city,
+               ba.area,
+               ba.detail_address,
+               ba.receiver,
+               ba.tel,
+               boi.`id` order_item_id,
+               boi.`book_id`,
+               bm.bookId,
+               bm.`imgUrl`,
+               bm.`bookName`,
+               bm.bookDescription,
+               boi.`count`
+        FROM book_order bo,
+             book_orderitem boi,
+             book_address ba,
+             book_msg bm
+        <where>
+            bo.`order_num` = boi.`order_id`
+                    AND bo.`address_id` = ba.`id`
+                    AND boi.`book_id` = bm.`bookId`
+            <if test="keywords != null and keywords != ''">
+                AND (bo.order_num like concat('%', #{keywords}, '%')
+                        OR bm.bookName like concat('%', #{keywords}, '%')
+                        OR ba.receiver like concat('%', #{keywords}, '%'))
+            </if>
+        </where>
+    </select>
+    <update id="cancelOrderById">
+        update book_order
+        set order_status=#{status}
+        where id = #{id}
     </update>
 </mapper>

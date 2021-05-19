@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>角色管理</title>
+    <link th:include="~{admin/link ::link}">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<script th:inline="javascript">
+    let currentMenu = "roleInput";
+</script>
+<div class="wrapper">
+
+    <div th:include="~{admin/navbar ::navbar}"></div>
+
+    <div th:include="~{admin/menu ::menu}"></div>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>角色添加</h1>
+        </section>
+
+        <section class="content">
+            <div class="box">
+                <form class="form-horizontal" action="/role/saveOrUpdate" method="post" id="editForm">
+
+                    <input type="hidden" name="id">
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label class="col-sm-2 control-label">角色名称：</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="name"
+                                   placeholder="请输入角色名称">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">角色编号：</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="sn"
+                                   placeholder="请输入角色编号">
+                        </div>
+                    </div>
+                    <div class="form-group " id="role">
+                        <label for="role" class="col-sm-2 control-label">分配权限：</label><br/>
+                        <div class="row" style="margin-top: 10px">
+                            <div class="col-sm-2 col-sm-offset-2">
+                                <select multiple class="form-control allPermissions"
+                                        style="height: 350px;" size="15">
+                                    <option th:each="permission:${permissions}"
+                                            th:value="${permission.id}">[[${permission.name}]]
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-1" style="margin-top: 60px;" align="center">
+                                <div>
+
+                                    <a type="button" class="btn btn-primary" style="margin-top: 10px"
+                                       title="右移动"
+                                       onclick="moveSelected('allPermissions', 'selfPermissions')">
+                                        <span class="fa fa-angle-right"></span>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a type="button" class="btn btn-primary " style="margin-top: 10px"
+                                       title="左移动"
+                                       onclick="moveSelected('selfPermissions', 'allPermissions')">
+                                        <span class="fa fa-angle-left"></span>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a type="button" class="btn btn-primary " style="margin-top: 10px"
+                                       title="全右移动"
+                                       onclick="moveAll('allPermissions', 'selfPermissions')">
+                                        <span class="fa fa-angle-double-right"></span>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a type="button" class="btn btn-primary " style="margin-top: 10px"
+                                       title="全左移动"
+                                       onclick="moveAll('selfPermissions', 'allPermissions')">
+                                        <span class="fa fa-angle-double-left"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <select multiple class="form-control selfPermissions"
+                                        style="height: 350px;" size="15"
+                                        name="ids">
+                                    <option th:each="relation:${relations}" th:value="${relation.id}">
+                                        [[${relation.name}]]
+                                    </option>
+                                </select>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-1 col-sm-6">
+                            <button type="button" class="btn btn-primary btn-submit">保存</button>
+                            <a href="javascript:window.history.back()" class="btn btn-danger">取消</a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </section>
+    </div>
+
+
+    <div th:include="~{admin/footer ::footer}"></div>
+</div>
+<div th:include="~{admin/menu ::currentMenu}"></div>
+</body>
+<script>
+
+    function moveAll(srcClass, targetClass) {
+        $("." + targetClass).append($("." + srcClass + "> option"));
+    }
+
+    function moveSelected(srcClass, targetClass) {
+        $("." + targetClass).append($("." + srcClass + "> option:selected"));
+    }
+
+    $(function () {
+        //点击保存之前选中右边选择的权限
+        $(".btn-submit").click(function () {
+            $(".selfPermissions>option").prop("selected", true);
+            $("#editForm").submit();
+        });
+
+
+        var a = [];
+        let $selfPermissions = $(".selfPermissions>option");
+        $selfPermissions.each(function (index, element) {
+            console.log(element);
+            a.push($(element).val());
+        });
+        let $allPermissions = $(".allPermissions>option");
+        $allPermissions.each(function (index, element) {
+            if ($.inArray($(element).val(), a) >= 0) {
+                $(element).remove();
+            }
+        })
+
+    });
+</script>
+</html>

@@ -11,18 +11,21 @@
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/shopCartTest.css}">
     <link rel="stylesheet" th:href="@{/css/jquery-confirm.css}">
     <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/order_info.css}">
+    <link rel="stylesheet" th:href="@{/css/search_style.css}">
+    <link rel="stylesheet" th:href="@{/js/font-awesome/css/font-awesome.min.css}">
 
     <script th:src="@{/js/jquery-3.4.1.min.js}" type="application/javascript"></script>
     <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/jquery-confirm.js}" type="text/javascript"></script>
     <script th:src="@{/js/domlastic.js}" type="text/javascript"></script>
+    <script th:src="@{/js/twbsPagination/jquery.twbsPagination.min.js}" type="application/javascript"></script>
 
 </head>
 <body style="background-color: rgba(60,179,113,0.1);">
 <div th:insert="~{navigation ::nav}"></div>
 <div class="container">
 
-    <div th:if="${orderInfoDTOS}==null" class="row">
+    <div th:if="${pageInfo.list}==null" class="row">
         <h1 class="h1">亲，您还没有已提交的订单，<a href="">再逛一逛吧!</a></h1>
         <img src="img/empty.png" alt="您暂时没有订单">
     </div>
@@ -33,6 +36,9 @@
     </div>
 
     <div class="row" id="order_table_div">
+        <form class="form-inline" id="searchForm" action="/order/list" method="post">
+            <input type="hidden" name="currentPage" id="currentPage1" value="1">
+        </form>
         <table id="order_table" border="0" cellpadding="0" cellspacing="0">
             <thead>
             <tr id="table_head">
@@ -45,16 +51,17 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="order_item" th:id="'orderItem'+${orderInfoDTO.id}" th:each="orderInfoDTO:${orderInfoDTOS}">
+            <tr class="order_item" th:id="'orderItem'+${orderInfoDTO.id}" th:each="orderInfoDTO:${pageInfo.list}">
 
                 <td>
                     <span th:text="${orderInfoDTO.order_num}"></span>
                 </td>
-                <td style="text-align: center" >
-                    <div  th:each="orderItem:${orderInfoDTO.orderItem}">
+                <td style="text-align: center">
+                    <div th:each="orderItem:${orderInfoDTO.orderItem}">
                         <span th:text="${orderItem.count} +X"></span>
-                        <a th:href="'/books?bookId='+${orderItem.bookMsg.bookId}"  target="_blank" title="${orderDetail.bookName}" style="width: 50px;height: 50px">
-                            <img th:src="${orderItem.bookMsg.imgUrl}" style="width: 40px" />
+                        <a th:href="'/books?bookId='+${orderItem.bookMsg.bookId}" target="_blank"
+                           title="${orderDetail.bookName}" style="width: 50px;height: 50px">
+                            <img th:src="${orderItem.bookMsg.imgUrl}" style="width: 40px"/>
                             <span th:text="${orderItem.bookMsg.bookName}"></span>
                         </a>
                     </div>
@@ -62,7 +69,7 @@
 
                 </td>
                 <td>
-<!--                    三目运算符嵌套 先判断是否支付，再判断是否完成-->
+                    <!--                    三目运算符嵌套 先判断是否支付，再判断是否完成-->
                     <span th:text=" ${orderInfoDTO.order_status}=='4'?'完成订单':(${orderInfoDTO.order_status}=='1'?'支付成功':'未支付')"></span>
                 </td>
                 <td>
@@ -70,48 +77,91 @@
                     <span class="red" th:text="￥+${orderInfoDTO.order_total}"></span>
                 </td>
                 <td>
-                    <span th:text="${orderInfoDTO.address.province}+${orderInfoDTO.address.city}+${orderInfoDTO.address.area}+${orderInfoDTO.address.detail_address}"></span>
+                    <span th:text="${orderInfoDTO.orderStatusDisplay}"></span>
                 </td>
                 <td>
-<!--                    订单状态为0 未支付-->
+                    <!--                    订单状态为0 未支付-->
                     <div th:if="${orderInfoDTO.order_status.equals('0')}">
-                        <button type="button" class="btn btn-info btn-xs" th:onclick="|toPay(${orderInfoDTO.id})|">
+                        <button type="button" class="btn btn-info btn-xs"
+                                th:onclick="|toPay(${orderInfoDTO.id})|">
                             去支付
                         </button>
                         <button type="button" class="btn btn-xs btn-danger"
-                                th:onclick="|deleteOrder(${orderInfoDTO.id})|">
+                                th:onclick="|cancelOrder(${orderInfoDTO.id})|">
                             取消订单
                         </button>
                     </div>
-<!--                    订单状态为1 已支付-->
-                    <div th:if="${not orderInfoDTO.order_status.equals('0')}">
-                        <button th:id="'complete'+${orderInfoDTO.id}" th:if="${not orderInfoDTO.order_status.equals('4')}" type="button" class="btn btn-xs btn-info"
+                    <!--                    订单状态为1 已支付-->
+                    <div th:if="${ orderInfoDTO.order_status.equals('1')}">
+                        <button th:id="'complete'+${orderInfoDTO.id}"
+                                th:if="${not orderInfoDTO.order_status.equals('4')}" type="button"
+                                class="btn btn-xs btn-info"
                                 th:onclick="|confirmReceiving(${orderInfoDTO.id})|">
                             确认收货
                         </button>
                         <button type="button" class="btn btn-xs btn-info" onclick="lookShipping()">
                             查看物流
                         </button>
-                        <button type="button" class="btn btn-xs btn-danger" th:onclick="|deleteOrder(${orderInfoDTO.id})|">
+                        <button type="button" class="btn btn-xs btn-danger"
+                                th:onclick="|deleteOrder(${orderInfoDTO.id})|">
                             删除订单
                         </button>
                     </div>
 
+                    <div th:if="${ orderInfoDTO.order_status.equals('3')}">
+                        <button type="button" class="btn btn-xs btn-default" >
+                            已取消
+                        </button>
+                        <button type="button" class="btn btn-xs btn-danger"
+                                th:onclick="|deleteOrder(${orderInfoDTO.id})|">
+                            删除订单
+                        </button>
+                    </div>
 
-
+                    <div th:if="${ orderInfoDTO.order_status.equals('4')}">
+                        <button type="button" class="btn btn-xs btn-success" >
+                            去评价
+                        </button>
+                        <button type="button" class="btn btn-xs btn-danger"
+                                th:onclick="|deleteOrder(${orderInfoDTO.id})|">
+                            删除订单记录
+                        </button>
+                    </div>
                 </td>
             </tr>
-
             </tbody>
 
         </table>
+
+        <div style="text-align: center;">
+            <ul id="pagination-demo" class="pagination-sm"></ul>
+        </div>
+        <script>
+            //分页
+            $(function () {
+                $('#pagination-demo').twbsPagination({
+                    totalPages: [[${pageInfo.pages}]],
+                    startPage: [[${pageInfo.pageNum}]],
+                    visiblePages: [[${pageInfo.pageSize}]],
+                    first: '首页',
+                    prev: '上一页',
+                    next: '下一页',
+                    last: '尾页',
+                    initiateStartPageClick: false,
+                    onPageClick: function (event, page) {
+                        $("#currentPage1").val(page);
+                        $("#searchForm").submit();
+                    }
+                });
+            })
+        </script>
     </div>
 </div>
 </body>
 <script type="text/javascript">
 
     function toPay(id) {
-        window.location.href="/order/orderPay?id="+id;
+        window.location.href = "/order/orderPay?id=" + id;
     }
 
     function confirmReceiving(id) {
@@ -132,7 +182,7 @@
                             data: {id: id},
                             dataType: "json",
                             success: function (data) {
-                                if (data==true){
+                                if (data == true) {
                                     domLastic.init({
                                         itemsClassnameToConnect: 'cart_item', //类选择器
                                         itemsJointStrength: 10, //value optimum between 10 - 100
@@ -162,7 +212,7 @@
         });
     }
 
-    function deleteOrder(id){
+    function deleteOrder(id) {
         var $deleteItem = $("#orderItem" + id);
         $.confirm({
             title: '删除',
@@ -180,7 +230,7 @@
                             data: {id: id},
                             dataType: "json",
                             success: function (data) {
-                                if (data==true){
+                                if (data == true) {
                                     domLastic.init({
                                         itemsClassnameToConnect: 'cart_item', //类选择器
                                         itemsJointStrength: 10, //value optimum between 10 - 100

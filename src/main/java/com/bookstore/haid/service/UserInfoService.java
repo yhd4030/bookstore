@@ -1,13 +1,17 @@
 package com.bookstore.haid.service;
 
 import com.bookstore.haid.mapper.UserInfoMapper;
+import com.bookstore.haid.model.Role;
 import com.bookstore.haid.model.User;
 import com.bookstore.haid.utils.PasswordEncoderUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Service
 public class UserInfoService {
@@ -17,8 +21,8 @@ public class UserInfoService {
     @Autowired
     private PasswordEncoderUtil passwordEncoderUtil;
 
-    public User findUserById(String username) {
-        return userInfoMapper.findUserById(username);
+    public User findUserByUsername(String username) {
+        return userInfoMapper.findUserByUsername(username);
     }
 
     public Boolean updateUser(User user) {
@@ -54,5 +58,34 @@ public class UserInfoService {
         }
         System.out.println("---------------密码错误---------------");
         return false;
+    }
+
+    public PageInfo<User> userList(int pageNum, int pageSize,String keywords) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> allUser = userInfoMapper.findAllUser(keywords);
+        return new PageInfo(allUser);
+    }
+
+    public boolean deleteById(Integer id) {
+        return userInfoMapper.deleteById(id);
+    }
+
+    public Boolean addUser(User user) {
+        return userInfoMapper.addUser(user);
+    }
+
+    public User findUserById(Integer id) {
+        return userInfoMapper.findUserById(id);
+    }
+
+    public User checkUserExist(String username) {
+        User userByUsername = userInfoMapper.findUser(username);
+        return userByUsername;
+
+    }
+
+    public List<Role> queryAllRole() {
+
+        return userInfoMapper.selectAllRole();
     }
 }

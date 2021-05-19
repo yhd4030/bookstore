@@ -53,11 +53,4 @@ public class CheckBookMsgController {
         List<BookMsg> similarBook = checkBookService.similarBook(bookName);
         return similarBook;
     }
-
-//    @GetMapping("/books/buy")
-//    public String buyBook(Integer bookId){
-//        checkBookService.buy(bookId);
-//        return "buyBook";
-//
-//    }
 }

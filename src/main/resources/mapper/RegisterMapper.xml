@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookstore.haid.mapper.RegisterMapper">
+<insert id="insertUser">
+    insert into book_user(username,password,name,phone) values (#{username},#{password},#{name},#{phone});
+</insert>
+</mapper>

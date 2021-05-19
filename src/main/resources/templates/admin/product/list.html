@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>商品列表</title>
+    <link th:include="~{admin/link ::link}">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<script th:inline="javascript">
+    let currentMenu = "product_list";
+</script>
+<style type="text/css">
+    td {
+        max-width: 100px;
+        overflow: hidden;
+    }
+
+    #searchBook {
+        padding-top: 50px;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function editBook(pId) {
+        location.href = "/admin/product/edit?bookId=" + pId;
+    }
+
+    function changeBookShelf(pid, isShelf) {
+        var $btnId = $("#shelfBtn" + pid);
+        var $stateId = $("#state" + pid);
+        var idStr = "shelfBtn" + pid;
+        var stateId = "state" + pid;
+        if (isShelf == 0) {
+            if (confirm("上架书籍?")) {
+                let isShelf = 1;
+                $.ajax({
+                    method: "post",
+                    url: "/admin/product/updateIsShelf",
+                    data: {bookId: pid, isShelf: isShelf},
+                    success: function (data) {
+                        if (data == true) {
+                            dialoger.$toast({mes: '上架成功', timeout: 1000});
+                            $($stateId).slideToggle(500, function () {
+                                // $($btnId).innerHTML="<td class='red' id='"+stateId+"'>已上架</td>"
+                                $($stateId).replaceWith("<td class='green' id='" + stateId + "'>已上架</td>");
+                            });
+                            $($btnId).slideToggle(150, function () {
+                                $($btnId).replaceWith(" <button id='" + idStr + "' type='button' class='btn btn-xs btn-warning'  text='下架'" +
+                                    "onclick='changeBookShelf(" + pid + "," + isShelf + ")'>下架</button>");
+                            });
+                        }
+                    }
+                });
+            }
+        }
+        if (isShelf == 1) {
+            if (confirm("下架书籍?")) {
+                let isShelf = 0;
+                $.ajax({
+                    method: "post",
+                    url: "/admin/product/updateIsShelf",
+                    data: {bookId: pid, isShelf: isShelf},
+                    success: function (data) {
+                        if (data == true) {
+                            dialoger.$toast({mes: '已下架'})
+                            $($stateId).slideToggle(500, function () {
+                                // $($stateId).innerHTML="<td class='red' id='"+stateId+"'>已上架</td>";
+                                $($stateId).replaceWith("<td class='red' id='" + stateId + "'>已下架</td>");
+                            });
+                            $($btnId).slideToggle(150, function () {
+                                $($btnId).replaceWith(" <button id='" + idStr + "' type='button' class='btn btn-xs btn-warning'  text='上架'" +
+                                    "onclick='changeBookShelf(" + pid + "," + isShelf + ")'>上架</button>");
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    function deleteBook(bookId) {
+        Swal.fire({
+            title: '确定删除?',
+            text: "该操作无法撤回!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/product/deletion",
+                    data: {id: bookId},
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.href = "/admin/user/list";
+                        } else {
+                            Swal.fire(
+                                data.msg,
+                                '服务器好像出问题了',
+                                'error'
+                            )
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function submitSearchForm() {
+        var keywords = $("#name").val();
+        if ("" == keywords.trim()) {
+            // dialoger.$toast({mes: '搜了个寂寞'})
+            $("#name").val("");
+        }
+        $("#adminProductSearch").submit();
+    }
+
+</script>
+<div class="wrapper">
+    <div th:include="~{admin/navbar ::navbar}"></div>
+
+    <div th:include="~{admin/menu ::menu}"></div>
+
+
+    <div class="content-wrapper ">
+        <section class="content-header">
+            <h1>商品列表</h1>
+        </section>
+
+        <section class="content">
+            <div class="box">
+                <!--高级查询--->
+                <div style="margin: 10px;">
+                    <form class="form-inline" id="searchForm" action="/admin/product/list" method="post">
+                        <input type="hidden" name="pageNum" id="currentPage" value="1">
+                        <div class="form-group">
+                            <label for="keyword">关键字:</label>
+                            <input type="text" class="form-control" name="keywords"
+                                   th:value="${#httpServletRequest.getAttribute('keywords')}"
+                                   placeholder="商品名">
+                        </div>
+                        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span>
+                            查询
+                        </button>
+                        <a href="/admin/product/add" class="btn btn-success btn-input">
+                            <span class="glyphicon glyphicon-plus"></span> 添加
+                        </a>
+                    </form>
+                </div>
+                <div class="box-body table-responsive ">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="allCb"></th>
+                            <th>序号</th>
+                            <th>商品名称</th>
+                            <th>图片</th>
+                            <th>种类</th>
+                            <th>原价</th>
+                            <th>折扣</th>
+                            <th>现价</th>
+                            <th>状态</th>
+                            <th>库存</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product:${productList.list}">
+                            <td><input type="checkbox" class="cb"></td>
+                            <td th:text="${productStat.count}"></td>
+                            <td>
+                                <a th:href="'/books?bookId='+${product.bookId}" target="_blank"
+                                   th:title="${product.bookName}">
+                    <span class="admin_productName" th:text="${product.bookName}"
+                          style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; width: 120px; display: inline-block;"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <img th:src="${product.imgUrl}" style="width: 40%">
+                            </td>
+                            <td th:text="${product.typeId}"></td>
+                            <td class="red" th:text="'￥'+${product.bookPrice}"></td>
+                            <td class="red" th:text="${product.discount}"></td>
+                            <td class="red" th:text="${product.bookPrice.multiply(product.discount).setScale(2)}"></td>
+                            <td th:class="${product.isShelf}==1?'green':'red'" th:id="'state'+${product.bookId}"
+                                th:text="${product.isShelf}==1?'上架中':'已下架'"></td>
+                            <td th:text="${product.amount}"></td>
+                            <td>
+                                <a href="#"
+                                   class="btn btn-info btn-xs btn_redirect" th:onclick="|editBook(${product.bookId})|">
+                                    <span class="glyphicon glyphicon-pencil"></span> 编辑
+                                </a>
+                                <a href="#"
+                                   th:id="'shelfBtn'+${product.bookId}"
+                                   th:text="${product.isShelf}==1?'下架':'上架'"
+                                   th:onclick="|changeBookShelf(${product.bookId},${product.isShelf})|"
+                                   class="btn btn-info btn-xs btn_redirect btn-warning">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+                                <a href="#"
+                                   class="btn btn-danger btn-xs btn-delete" th:onclick="|deleteBook(${product.bookId})|">
+                                    <span class="glyphicon glyphicon-trash"></span> 删除
+                                </a>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <!--分页-->
+                    <div style="text-align: center;">
+                        <ul id="pagination-demo" class="pagination-sm"></ul>
+                    </div>
+                    <script>
+                        //分页
+                        $(function () {
+                            $('#pagination-demo').twbsPagination({
+                                totalPages: [[${productList.pages}]],
+                                startPage: [[${productList.pageNum}]],
+                                visiblePages: [[${productList.pageSize}]],
+                                first: '首页',
+                                prev: '上一页',
+                                next: '下一页',
+                                last: '尾页',
+                                initiateStartPageClick: false,
+                                onPageClick: function (event, page) {
+                                    $("#currentPage").val(page);
+                                    $("#searchForm").submit();
+                                }
+                            });
+                        })
+                    </script>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <div th:include="~{admin/footer ::footer}"></div>
+</div>
+<div th:include="~{admin/menu ::currentMenu}"></div>
+</body>
+</html>

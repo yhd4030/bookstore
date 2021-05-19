@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/dropdown.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bs.css}"/>
+    <link rel="stylesheet" th:href="@{/css/product_list.css}"/>
+    <link rel="stylesheet" th:href="@{/css/mc-dialoger.css}"/>
+    <link rel="stylesheet" th:href="@{/css/search_style.css}">
+    <link rel="stylesheet" th:href="@{/js/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/js/sweetalert2/sweetalert2.min.css}">
+
+
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script type="text/javascript" th:src="@{/js/dialoger.js}"></script>
+    <script th:src="@{/js/twbsPagination/jquery.twbsPagination.min.js}" type="application/javascript"></script>
+    <script th:src="@{/js/sweetalert2/sweetalert2.min.js}" type="text/javascript"></script>
+    <script type="text/javascript">
+        function addCart(bookId) {
+            $.ajax({
+                type: "post",
+                url: "/books/shopCart/add",
+                data: {bookId: bookId, buyNum: 1},
+                success: function (data) {
+                    if (data == true) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '添加成功',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
+                    } else {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: '添加好像出现错误了',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
+                    }
+                }
+            })
+        }
+    </script>
+</head>
+<body style="background-color: rgba(60,179,113,0.1);">
+<div th:insert="~{navigation ::nav}"></div>
+<div class="container">
+    <div class="search_tab">
+        <ul>
+            <li>全部商品</li>
+        </ul>
+    </div>
+    <div class="crumbs">
+        <!--        <div>-->
+        <!--            <a href="/product/list">全部</a>-->
+        <!--            <span>&gt;</span>-->
+        <!--            <span class="search_word" th:if="${typeId}==1">纸尿裤</span>-->
+        <!--            <span class="search_word" th:if="${typeId}==2">婴儿推车</span>-->
+        <!--            <span class="search_word" th:if="${typeId}==3">奶瓶</span>-->
+        <!--            <span class="search_word" th:if="${typeId}==4">婴儿床</span>-->
+        <!--            <span class="search_word" th:if="${typeId}==5">奶粉</span>-->
+        <!--        </div>-->
+        <span class="total_search_book_count">
+            共<em class="red" th:text="${productList.total}"></em>件商品
+        </span>
+    </div>
+    <div class="search_result">
+        <div class="shoplist">
+            <ul class="shoplist_ul">
+
+                <li class="product_list" th:each="product:${productList.list}">
+                    <div style="height: 200px;width: 200px;border: 1px black solid;margin: 0 auto;">
+                        <a th:href="'/books?bookId='+${product.bookId}" target="_blank" th:title="${product.bookName}">
+                            <img th:src="${product.imgUrl}" th:alt="${product.bookName}" width="200px"
+                                 height="200px"/>
+                        </a>
+                    </div>
+                    <div>
+                        <p class="name">
+                            <a th:href="'/books?bookId='+${product.bookId}" th:title="${product.bookName}"
+                               target="_blank">
+                                <span class="product_name" th:text="${product.bookName}"></span>
+                            </a>
+                        </p>
+                        <p class="price">
+                            <span class="search_now_price"
+                                  th:text="'￥'+${product.bookPrice.multiply(product.discount).setScale(2)}"></span>
+                        </p>
+                        <p class="price">
+                            <span style="color: #C0C0C0;">定价：</span>
+                            <span class="oprice" th:text="'￥'+${product.bookPrice}"></span>
+                        </p>
+                    </div>
+                    <div class="shop_button">
+                        <p class="bottom_p">
+                            <a class="search_btn_cart" href="javascript:void(0);"
+                               th:onclick="|addCart(${product.bookId})|">加入购物车</a>
+                            <a class="search_btn_collect" th:href="'/order/infoByBuy?bookId='+${product.bookId}">购买</a>
+                        </p>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+        <div style="text-align: center;">
+            <ul id="pagination-demo" class="pagination-sm"></ul>
+        </div>
+        <script>
+            //分页
+            $(function () {
+                $('#pagination-demo').twbsPagination({
+                    totalPages: [[${productList.pages}]],
+                    startPage: [[${productList.pageNum}]],
+                    visiblePages: 6,
+                    first: '首页',
+                    prev: '上一页',
+                    next: '下一页',
+                    last: '尾页',
+                    initiateStartPageClick: false,
+                    onPageClick: function (event, page) {
+                        $("#currentPage").val(page);
+                        $("#search-form").submit();
+                    }
+                });
+            })
+        </script>
+    </div>
+</div>
+</body>
+</html>

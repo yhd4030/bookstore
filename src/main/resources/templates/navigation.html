@@ -1,64 +1,99 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5 ">
 
 <body>
 <div th:fragment="nav">
     <ul class="layui-nav">
+        <form action="/product/list" method="post" id="search-form">
+            <input type="hidden" name="pageNum" id="currentPage" value="1">
+            <li class="layui-nav-item "><a href="/">Haid-BookShop</a></li>
 
-        <li class="layui-nav-item "><a href="/">Haid-BookShop</a></li>
-        <!--        登录-->
-        <li class="layui-nav-item navbar-right nav_hover">
-            <!--            判断是否登录过 如果登录过则将导航栏的用户图标改为用户名-->
-            <a th:if="${#httpServletRequest.session.getAttribute('username')==null}" href="/user/login">
-                <i class="layui-icon layui-icon-user" style="font-size: 30px; color: #1E9FFF;"></i>
-            </a>
-            <span class=" dropdown-toggle " id="dropdown-user" th:if="${#httpServletRequest.session.getAttribute('username')!=null}" href="#" style="padding: 0 20px"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="search-box col-md-3">
+                <input class="search-txt" type="text" name="keywords"
+                       th:value="${#httpServletRequest.getAttribute('keywords')}" placeholder="请输入关键字">
+                <a href="javascript:searchProduct()" class="search-btn">
+                    <i class="fa fa-search fa-2x"></i>
+                </a>
+                <script>
+                    function searchProduct() {
+                        $("#search-form").submit();
+                    }
+                </script>
+            </div>
+
+            <!--        登录-->
+
+            <li class="layui-nav-item navbar-right nav_hover">
+                <!--            判断是否登录过 如果登录过则将导航栏的用户图标改为用户名-->
+                <a th:if="${#httpServletRequest.session.getAttribute('username')==null}" href="/user/login">
+                    <i class="layui-icon layui-icon-user" style="font-size: 30px; color: #1E9FFF;"></i>
+                </a>
+                <span class=" dropdown-toggle " id="dropdown-user"
+                      th:if="${#httpServletRequest.session.getAttribute('username')!=null}" href="#"
+                      style="padding: 0 20px"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">
-                    <span id="login_username" th:text="${#httpServletRequest.remoteUser}" style="font-size: 19px"></span>
+                    <span id="login_username" th:text="${#httpServletRequest.remoteUser}"
+                          style="font-size: 19px"></span>
                 </i>
 
                 <i class="layui-icon layui-icon-triangle-d" style="font-size: 15px; color: #1E9FFF;"></i>
             </span>
-            <ul id="dropdown-menu" class="dropdown-menu">
-                <li><a href="/user/information"><i class="layui-icon layui-icon-user" style="font-size: 30px; color: #1E9FFF;"></i><span style="color:#1E9FFF ">个人信息</span></a></li>
-                <li><a href="#"><i class="layui-icon layui-icon-notice" style="font-size: 30px; color: #1E9FFF;"></i><span style="color:#1E9FFF ">通知</span></a></li>
-                <li><a href="#"><i class="layui-icon layui-icon-set" style="font-size: 30px; color: #1E9FFF;"></i><span style="color:#1E9FFF ">设置</span></a></li>
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a id="logoutBtn" href="/user/logout">
-<!--                        <form th:action="@{/user/logout}" method="post">-->
-<!--                            <button style="background-color: white;border:none">-->
-                                    <i class="layui-icon layui-icon-logout" style="font-size: 30px; color: #1E9FFF;"></i>
-                                    <span>退出</span>
-<!--                            </button>-->
-<!--                        </form>-->
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="layui-nav-item navbar-right nav_hover">
-            <a th:href="@{'/order/list'}">
-                <i class="layui-icon layui-icon-tabs" style="font-size: 30px; color: #1E9FFF;"></i>
-                <span style="color: #1E9FFF">我的订单</span>
+                <ul id="dropdown-menu" class="dropdown-menu">
+                    <li><a href="/user/information"><i class="layui-icon layui-icon-user"
+                                                       style="font-size: 30px; color: #1E9FFF;"></i><span
+                            style="color:#1E9FFF ">个人信息</span></a></li>
+                    <li><a href="#"><i class="layui-icon layui-icon-notice"
+                                       style="font-size: 30px; color: #1E9FFF;"></i><span
+                            style="color:#1E9FFF ">通知</span></a></li>
+                    <li sec:authorize="hasAuthority('admin')"><a href="/admin/home"><i
+                            class="layui-icon layui-icon-console"
+                            style="font-size: 30px; color: #1E9FFF;"></i><span
+                            style="color:#1E9FFF ">管理员后台</span></a>
+                    </li>
 
-            </a>
+                    <li><a href="#"><i class="layui-icon layui-icon-set"
+                                       style="font-size: 30px; color: #1E9FFF;"></i><span
+                            style="color:#1E9FFF ">设置</span></a></li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a id="logoutBtn" href="/user/logout">
+                            <!--                        <form th:action="@{/user/logout}" method="post">-->
+                            <!--                            <button style="background-color: white;border:none">-->
+                            <i class="layui-icon layui-icon-logout" style="font-size: 30px; color: #1E9FFF;"></i>
+                            <span>退出</span>
+                            <!--                            </button>-->
+                            <!--                        </form>-->
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="layui-nav-item navbar-right nav_hover">
+                <a th:href="@{'/order/list'}">
+                    <i class="layui-icon layui-icon-tabs" style="font-size: 30px; color: #1E9FFF;"></i>
+                    <span style="color: #1E9FFF">我的订单</span>
 
-        </li>
-        <!--        购物车-->
-        <li class="layui-nav-item navbar-right nav_hover">
-            <a th:href="@{'/books/shopCart?username='+${#httpServletRequest.remoteUser}}">
-                <i class="layui-icon layui-icon-cart-simple" style="font-size: 30px; color: #1E9FFF;"></i>
-                <span style="color: #1E9FFF">购物车</span>
-            </a>
-        </li>
+                </a>
 
-        <!--        主页-->
-        <li class="layui-nav-item navbar-right nav_hover">
-            <a href="/">
-                <i class="layui-icon layui-icon-home" style="font-size: 30px; color: #1E9FFF;"></i>
-            </a>
-        </li>
+            </li>
+            <!--        购物车-->
+            <li class="layui-nav-item navbar-right nav_hover">
+                <a th:href="@{'/books/shopCart?username='+${#httpServletRequest.remoteUser}}">
+                    <i class="layui-icon layui-icon-cart-simple" style="font-size: 30px; color: #1E9FFF;"></i>
+                    <span style="color: #1E9FFF">购物车</span>
+                </a>
+            </li>
+
+            <!--        主页-->
+            <li class="layui-nav-item navbar-right nav_hover">
+                <a href="/">
+                    <i class="layui-icon layui-icon-home" style="font-size: 30px; color: #1E9FFF;"></i>
+                </a>
+            </li>
+        </form>
     </ul>
 </div>
 <script th:src="@{/layui/layui.all.js}" type="text/javascript"></script>
@@ -70,6 +105,11 @@
             , $ = layui.jquery
             , layer = layui.layer;
     });
+
+
+    // $(".search-btn").click(function () {
+    //
+    // // })
 </script>
 </body>
 </html>
