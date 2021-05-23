@@ -1,5 +1,6 @@
 package com.bookstore.haid.controller.admin;
 
+import com.bookstore.haid.dto.UserDTO;
 import com.bookstore.haid.model.ExecuteResult;
 import com.bookstore.haid.model.Role;
 import com.bookstore.haid.model.User;
@@ -70,6 +71,11 @@ public class AdminUserController {
         model.addAttribute("userMsg", userMsg);
         model.addAttribute("roles", roles);
         return "admin/user/edit";
+    }
+    @RequestMapping("/update")
+    @ResponseBody
+    public Boolean update(User user){
+        return userInfoService.updateUser(user);
     }
 
     @PostMapping("/checkUserExist")

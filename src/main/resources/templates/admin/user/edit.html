@@ -24,7 +24,7 @@
 
         <section class="content">
             <div class="box">
-                <form class="form-horizontal" role="form" id="storeForm" method="post" action="admin/user/update">
+                <form class="form-horizontal" role="form" id="storeForm" method="post">
                     <input type="hidden" name="userId" th:value="${userMsg.id}">
                     <input type="hidden" name="username" th:value="${userMsg.username}">
                     <div class="form-group">
@@ -219,7 +219,7 @@
             submitHandler: function (form) {
                 $.ajax({
                     type: 'post',
-                    url: '/user/update',
+                    url: '/admin/user/update',
                     data: $("#storeForm").serialize(),
                     success: function (data) {
                         if (data == true) {
